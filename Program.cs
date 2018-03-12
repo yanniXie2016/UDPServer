@@ -30,12 +30,9 @@ namespace UdpChat
         public static byte[] receiveData = null;
         public static byte[] data_serialized = null;
         public static byte[] dataInBytes = null;
-
-        //public static byte[] data_deserialized = null;
+        public static string BroadcastData = null;
 
         public static Serialization data_deserialized;
-
-        public static string BroadcastData = null;
         #endregion
         
         public static void Main()
