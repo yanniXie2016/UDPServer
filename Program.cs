@@ -5,107 +5,87 @@ using System;
 using System.Net.Sockets;
 using System.IO;
 using System.Runtime.Serialization;
-//using UnityEngine;
 using System.Text;
+using System.Windows.Forms;
+
 
 namespace UdpChat
 {
-    public class Server //: MonoBehaviour
+    public class Client
     {
         #region field && state
+        public static string ServerIp = "10.246.130.191"; // server Ip
+        ////public static string ServerIp = "10.246.53.11"; // server Ip (Ethernet)
+        public static string MyIp = "10.246.130.191"; // Client Ip
         //public static string ServerIp = "192.168.2.101"; // server Ip
         //public static string MyIp = "192.168.2.101"; // Client Ip
-        public static string ServerIp = "10.246.130.191"; // server Ip
-        public static string MyIp = "10.246.130.191"; // Client Ip
-        public static int Inport = 48190; // Port for ingoing 
-        public static int Outport = 48191; // Port for outgoing 
+        public static int s_Inport = 48190; // Port for ingoing 
+        public static int s_Outport = 48191; // Port for outgoing 
         public static int c_Inport = 48192; // Port for ingoing 
         public static int c_Outport = 48193; // Port for outgoing
-
-        public static List<IPEndPoint> clients = new List<IPEndPoint>(); // one element for each client.
-
-        public static IPEndPoint ClientIpEndpointIn = null;
-        public static IPEndPoint ClientIpEndpointOut = null;
-        public static UdpClient server = null;
-        public static byte[] receiveData = null;
+        public static IPEndPoint ServerIpEndpoint = null;
+        public static IPEndPoint ServerIpEndpointOut = null;
+        public static UdpClient clientOut = null;
+        public static UdpClient clientIn = null;
+        public static Serialization SendData = null;
         public static byte[] data_serialized = null;
-        public static byte[] dataInBytes = null;
-        public static Serialization BroadcastData = null;
-
-        public static Serialization data_deserialized;
-        public static Serialization instance = new Serialization();
+        public static byte[] receiveBytes = null;
+        public static string MessageType = null;
+        public static Serialization instance = new Serialization();// creat a instance    
         #endregion
 
-
-        public static void Main()
+        static void Main()
         {
             try
             {
-                Console.WriteLine("Server ready");
+                Console.WriteLine("Client ready");
+                Client instance1 = new Client(); // creat a instance
+                ////////////////////////////////Receive/////////////////////////////
+                clientIn = new UdpClient(c_Inport);
+                ServerIpEndpointOut = new IPEndPoint(IPAddress.Parse(ServerIp), s_Outport);
+                clientIn.Connect(ServerIpEndpointOut);
+                clientIn.BeginReceive(new AsyncCallback(instance1.OnReceive), null); // begin receive data
+
+                ////////////////////////////////Send/////////////////////////////
                 while (true)
                 {
-                    server = new UdpClient(Inport); //Creates a UdpClient as server for reading incoming data.                     
-                    ClientIpEndpointOut = new IPEndPoint(IPAddress.Any, 0);//read datagrams sent from any source.
-                    receiveData = server.Receive(ref ClientIpEndpointOut);
-                    server.Connect(ClientIpEndpointOut);
-                    data_deserialized = instance.Deserialize(receiveData);
-                    BroadcastData = DataHandle(data_deserialized);
-                    server.Close();
-                    if (BroadcastData != null) Broadcast(BroadcastData);
+                    clientOut = new UdpClient(c_Outport);
+                    ServerIpEndpoint = new IPEndPoint(IPAddress.Parse(ServerIp), s_Inport);
+                    clientOut.Connect(ServerIpEndpoint);
+                    SendData = instance1.GetMassage(); // write data
+                    instance1.PrintMessage(SendData);
+                    instance1.OnSend(); // client send
+                    clientOut.Close();
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Console.WriteLine("error:" + e.Message);
             }
         }
 
-        private static void AddClient(IPEndPoint c)
+        private Serialization GetMassage()
         {
-            clients.Add(c); // add a new client.
-            Console.WriteLine("<" + c.ToString() + "> is connected");
-        }
-
-        private static void RemoveClient(IPEndPoint c)
-        {
-            clients.Remove(c); // remove a client.
-            Console.WriteLine("<" + c.ToString() + "> is disconnected");
-        }
-
-        private static Serialization DataHandle(Serialization data_deserialized)
-        { // data processing  
-            if (data_deserialized != null)
+            MessageType = Console.ReadLine();
+            switch (MessageType)
             {
-                switch (data_deserialized.MessageType)
-                {
-                    case "LogIn":
-                        PrintMessage(data_deserialized);
-                        AddClient(ClientIpEndpointOut);
-                        //data_deserialized.MessageType = "The client <" + ClientIpEndpointOut.ToString() + "> is connected";
-                        break;
-                    case "LogOut":
-                        PrintMessage(data_deserialized);
-                        RemoveClient(ClientIpEndpointOut);
-                        //data_deserialized.MessageType = "The client <" + ClientIpEndpointOut.ToString() + "> is disconnected";
-                        break;
-                    default:
-                        if (clients.Contains(ClientIpEndpointOut) == false)
-                            data_deserialized = null;
-                        else PrintMessage(data_deserialized);
-                        break;
-                }
+                case "I":
+                    instance.MessageType = "LogIn";
+                    break;
+                case "O":
+                    instance.MessageType = "LogOut";
+                    break;
+                default:
+                    instance.MessageType = MessageType;
+                    break;
             }
-            return data_deserialized;
+            instance.id = BitConverter.ToUInt32(IPAddress.Parse(MyIp).GetAddressBytes(), 0);
+            instance.name = 'C';
+            instance.time = DateTime.Now.ToString();
+            return instance;
         }
 
-        public static void WriteMessage(Serialization data_deserialized)
-        {
-            PrintByteArray(receiveData);
-            Console.WriteLine("The reveived packet:" + Convert.ToString(data_deserialized));
-            PrintMessage(data_deserialized);
-        }
-
-        public static void PrintMessage(Serialization data)
+        public void PrintMessage(Serialization data)
         {
             Console.WriteLine("<ip> " + new IPAddress(BitConverter.GetBytes(data.id)).ToString());
             Console.WriteLine("<category> " + Convert.ToString(data.category));
@@ -124,8 +104,17 @@ namespace UdpChat
             Console.WriteLine("<Time> " + data.time);
             Console.WriteLine("<Message> " + data.MessageType);
         }
+        //send message to the server
+        public void OnSend()
+        {
+            data_serialized = instance.Serialize();
+            //Console.Write("Packet:");
+            //PrintByteArray(data_serialized);
+            //Console.WriteLine(Encoding.Default.GetString(data_serialized));
+            clientOut.Send(data_serialized, data_serialized.Length);
+        }
 
-        public static void PrintByteArray(byte[] bytes)
+        public void PrintByteArray(byte[] bytes)
         {
             var sb = new StringBuilder("new byte[] { ");
             foreach (var b in bytes)
@@ -136,33 +125,27 @@ namespace UdpChat
             Console.WriteLine(sb.ToString());
         }
 
-        public static void Broadcast(Serialization data)
+        public void OnReceive(IAsyncResult res)
         {
-            foreach (IPEndPoint cl in clients) // send to each client
+            receiveBytes = clientIn.EndReceive(res, ref ServerIpEndpointOut);
+            Console.WriteLine("Recieved Time:" + DateTime.Now.ToString());
+            Serialization data_deserialized = instance.Deserialize(receiveBytes);
+            if (data_deserialized != null)
             {
-                try
-                {
-                    server = new UdpClient(Outport); //Creates a UdpClient as server for reading outcoming data.
-                    ClientIpEndpointIn = new IPEndPoint(cl.Address, c_Inport);
-
-                    if (ClientIpEndpointIn.Address.ToString() == ClientIpEndpointOut.Address.ToString())
-                    {
-                        server.Connect(ClientIpEndpointIn);
-                        instance = data;
-                        instance.name = 'S';
-                        instance.id = BitConverter.ToUInt32(IPAddress.Parse(MyIp).GetAddressBytes(), 0);
-                        data_serialized = instance.Serialize(); // serialize
-                        server.Send(data_serialized, data_serialized.Length); // send data
-                        Console.WriteLine("The message was sent to " + ClientIpEndpointIn.ToString());
-                    }
-                    server.Close();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
+                //DataInString = DataHandle(data_deserialized);
+                Console.WriteLine("Recieved data:");
+                PrintMessage(data_deserialized);
             }
+            clientIn.BeginReceive(new AsyncCallback(OnReceive), null);
         }
+        // data processing
+        //public string DataHandle(Serialization data)
+        //{
+        //    if (data != null)
+        //    {
+        //    }
+        //    return data;
+        //}
     }
     /// <summary>
     /// /////////////////packetize && depacketize
