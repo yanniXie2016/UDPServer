@@ -31,6 +31,7 @@ namespace MyApp
         HandlePacket handlePacket = new HandlePacket();
         static  MyNetwork instance = new MyNetwork();
         public string pl;  // payload
+        bool quitFlag = false;
 
         public List<IPEndPoint> ClientList = new List<IPEndPoint>();
 
@@ -54,30 +55,21 @@ namespace MyApp
 
         public void AddClient(IPEndPoint IPEP)
         {
-            ClientStatus cs;
             if (ClientList.Contains(IPEP) == false)
             {
-                cs = ClientStatus.New;
                 ClientList.Add(IPEP);
                 Console.WriteLine("Newly registered");
-            }
-            else
-            {
-                cs = ClientStatus.Old;
             }
         }
 
         public void BroadcastMessage(byte[] msg, List<IPEndPoint> list, IPEndPoint specifiedIP)
-        {           
+        {
             foreach (var ip in ClientList)
             {
-                string _ip = ip.ToString();
-                string _specifiedIP = specifiedIP.ToString();
-                bool isEqual = _ip.Equals(_specifiedIP);
-                if (!isEqual)
-                {                  
+                if (!Equals(ip.Address, specifiedIP.Address))
+                {
                     Sender.Client.BeginSendTo(msg, 0, msg.Length, SocketFlags.None, ip, OnSend, null);
-                }               
+                }
             }
         }
 
@@ -87,7 +79,7 @@ namespace MyApp
             if (isServer)
             {
                 this.ReceivePort = s_ReceivePort;
-                this.SendPort = s_SendPort; 
+                this.SendPort = s_SendPort;
                 Console.WriteLine("Server started, servicing on port {0}:", this.ReceivePort);
                 this.Objective = new IPEndPoint(IPAddress.Any, c_ReceivePort);
                 this.RefPoint = new IPEndPoint(IPAddress.Any, c_SendPort);
@@ -125,18 +117,33 @@ namespace MyApp
                 buffer = ClientWritePacket(msg, len_msg);
                 handlePacket.PrintByteArray(buffer);
                 BroadcastMessage(buffer, ClientList, RefPoint);
+
+                if (msg == "quit")
+                {
+                    quitFlag = true;
+                    Console.WriteLine("quitFlag: " + quitFlag);
+                }
             }
         }
 
         public static void Main(string[] args)
         {
-           
+            if (args.Length > 0 && args[0] == "client")
+                instance.isServer = false;
+                
             instance.Awake();
             instance.Start();
-            instance.Update();
-            while (true)
+
+            while (instance.quitFlag != true)
             {
-               
+                if (instance.isServer)
+                {
+                    System.Threading.Thread.Sleep(100);  // Just stay alive
+                }
+                else
+                {
+                    instance.Update();
+                }
             }
 
         }
@@ -162,7 +169,6 @@ namespace MyApp
             {
                 Sender.EndSend(ar);
                 Console.WriteLine("End Sending");
-                Update();
             }
             catch (ArgumentException)
             {
