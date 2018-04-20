@@ -1,12 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "monosim.Plugins", "monosim.Plugins.csproj", "{429C30F8-ECD2-8852-E271-F2EF6EC0839F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "monosim", "monosim.csproj", "{BE94D435-7331-CA07-903C-782DF3BA020E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "monosim.Editor.Plugins", "monosim.Editor.Plugins.csproj", "{29F306D0-9A2F-5D63-D63C-6C5EFC43346D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{429C30F8-ECD2-8852-E271-F2EF6EC0839F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{429C30F8-ECD2-8852-E271-F2EF6EC0839F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{429C30F8-ECD2-8852-E271-F2EF6EC0839F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{429C30F8-ECD2-8852-E271-F2EF6EC0839F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE94D435-7331-CA07-903C-782DF3BA020E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE94D435-7331-CA07-903C-782DF3BA020E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE94D435-7331-CA07-903C-782DF3BA020E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE94D435-7331-CA07-903C-782DF3BA020E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29F306D0-9A2F-5D63-D63C-6C5EFC43346D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29F306D0-9A2F-5D63-D63C-6C5EFC43346D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29F306D0-9A2F-5D63-D63C-6C5EFC43346D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29F306D0-9A2F-5D63-D63C-6C5EFC43346D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

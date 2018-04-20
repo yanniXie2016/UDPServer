@@ -1,0 +1,119 @@
+fileFormatVersion: 2
+guid: 3f4c257cfc5fa534dbb6921b4eb54660
+timeCreated: 1524118765
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section01_meshShape
+    100002: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShape
+    100004: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShape_ncl1_1
+    100006: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelTread_meshShape
+    100008: //RootNode
+    100010: wheelRim_logo_meshShape_Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90
+    400000: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section01_meshShape
+    400002: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShape
+    400004: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShape_ncl1_1
+    400006: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelTread_meshShape
+    400008: //RootNode
+    400010: wheelRim_logo_meshShape_Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90
+    2100000: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section01_meshShapeMat
+    2100002: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShapeMat
+    2100004: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShape_ncl1_1Mat
+    2100006: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelTread_meshShapeMat
+    2100008: wheelRim_logo_meshShape_Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90Mat
+    2300000: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section01_meshShape
+    2300002: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShape
+    2300004: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShape_ncl1_1
+    2300006: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelTread_meshShape
+    2300008: wheelRim_logo_meshShape_Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90
+    3300000: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section01_meshShape
+    3300002: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShape
+    3300004: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShape_ncl1_1
+    3300006: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelTread_meshShape
+    3300008: wheelRim_logo_meshShape_Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90
+    4300000: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section01_meshShape
+    4300002: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShape
+    4300004: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelRim_section02_meshShape_whieelRim_section02_meshShape_ncl1_1
+    4300006: Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90_whieelTread_meshShape
+    4300008: wheelRim_logo_meshShape_Project541_wheel_AlignedToHighREs_AL_WHEEL_WHEEL_S90
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
