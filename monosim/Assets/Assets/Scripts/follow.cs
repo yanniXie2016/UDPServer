@@ -8,7 +8,7 @@ public class follow : MonoBehaviour {
 
     public GameObject followObject;
     public GameObject lookAt;
-    public float tension = 3.0f;
+    public float tension = 2.0f;
     private float speed;
 
     // Use this for initialization
