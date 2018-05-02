@@ -53,6 +53,7 @@ namespace myApp
 
         // parameters for vehicle behaviour
         public GameObject EgoVehicle;
+        public GameObject Geometry;
         public GameObject[] PrefabList = new GameObject[1];
         public GameObject[] PlayerList;
         private List<UInt32> IdList;
@@ -127,7 +128,7 @@ namespace myApp
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
             speed_c = rigidbody.velocity * 2.23693629f;
             speed_a = rigidbody.angularVelocity;  // This is in radians per second
-            HandlePacket.coord speed = new HandlePacket.coord(speed_c.z, -speed_c.x, speed_c.y, speed_a.y, -speed_a.x, speed_a.z, 0x01 | 0x02, 0, 0);   // change it here
+            HandlePacket.coord speed = new HandlePacket.coord(speed_c.z, -speed_c.x, speed_c.y, -speed_a.y, -speed_a.x, speed_a.z, 0x01 | 0x02, 0, 0);   // change it here
             return speed;
         }
 
@@ -138,16 +139,18 @@ namespace myApp
             UInt32[] spare2 = new UInt32[4];
             float[] xyz = new float[3];
 
-            Vector3 pos_c = go.transform.position;
-            Vector3 pos_a = go.transform.localEulerAngles;
-            HandlePacket.coord pos = new HandlePacket.coord(pos_c.z, -pos_c.x, pos_c.y, Convert.ToSingle(pos_a.y*Math.PI/180f), -Convert.ToSingle(pos_a.x * Math.PI / 180f), Convert.ToSingle(pos_a.z * Math.PI / 180f), 0x01 | 0x02, 0, 0);  // change it here
+            //Vector3 pos_c = go.transform.position;
+            //Vector3 pos_a = go.transform.localEulerAngles;
+            Vector3 pos_c = Geometry.transform.position;
+            Vector3 pos_a = Geometry.transform.eulerAngles;
+            HandlePacket.coord pos = new HandlePacket.coord(pos_c.z, -pos_c.x, pos_c.y, Convert.ToSingle(-pos_a.y*Math.PI/180f), Convert.ToSingle(-pos_a.x * Math.PI / 180f), Convert.ToSingle(pos_a.z * Math.PI / 180f), 0x01 | 0x02, 0, 0);  // change it here
             HandlePacket.coord speed = GetMySpeed(go);
             HandlePacket.coord accel = new HandlePacket.coord(0, 0, 0, 0, 0, 0, 0x01, 0, 0);
             HandlePacket.geo geo = new HandlePacket.geo(4.6f, 1.86f, 1.6f, 0.8f, 0, 0.3f);
 
 
             HandlePacket.wheel_o[] wheel_O = new HandlePacket.wheel_o[4];
-            wheel_O[0] = new HandlePacket.wheel_o(1, 0, 0, spare0, 1, -0.025f, 0, 0, carController.CurrentSteerAngle, spare1);
+            wheel_O[0] = new HandlePacket.wheel_o(1, 0, 0, spare0, 1, -0.025f, 0, 0, 0.5f, spare1);
             wheel_O[1] = new HandlePacket.wheel_o(1, 1, 0, spare0, 1, -0.025f, 0, 0, carController.CurrentSteerAngle, spare1);
             wheel_O[2] = new HandlePacket.wheel_o(1, 2, 0, spare0, 1, -0.025f, 0, 0, 0, spare1);
             wheel_O[3] = new HandlePacket.wheel_o(1, 3, 0, spare0, 1, -0.025f, 0, 0, 0, spare1);
@@ -155,7 +158,7 @@ namespace myApp
             HandlePacket.wheel[] wheel = new HandlePacket.wheel[4];
             for (int i = 0; i < 4; i++)
             {
-                wheel_E[i] = new HandlePacket.wheel_e(55, 2, 3, 4, xyz, 5, 6, 7, 8, spare2);
+                wheel_E[i] = new HandlePacket.wheel_e();
                 wheel[i] = new HandlePacket.wheel(wheel_O[i], wheel_E[i]);
             }
             simTime = stopwatch1.Elapsed.TotalSeconds;

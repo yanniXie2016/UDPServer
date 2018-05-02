@@ -288,6 +288,7 @@ namespace myApp
                 this.steeringAngle = steeringAngle;
                 this.spare1 = spare1;
             }
+        
 
             public wheel_o(byte[] DataStream)
             {
@@ -337,6 +338,10 @@ namespace myApp
                 this.spare2 = spare2;
             }
 
+            public wheel_e()
+            {
+
+            }
             public wheel_e(byte[] DataStream)
             {
                 this.vAngular = BitConverter.ToSingle(DataStream, 0);
