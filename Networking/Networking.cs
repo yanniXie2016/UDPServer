@@ -23,13 +23,13 @@ namespace myApp
 
         //parameters for networking
         public bool isServer = true;
-        public static string serverAddress = "10.246.140.198";
+        public static string serverAddress = "169.254.145.12";  // change it here
         private List<IPEndPoint> ClientList = new List<IPEndPoint>();
 
-        public int s_SendPort = 48199;
-        public int s_ReceivePort = 600;
-        public int c_SendPort = 9000;
-        public int c_ReceivePort = 5000;
+        public int s_SendPort = 48190;
+        public int s_ReceivePort = 48191;
+        public int c_SendPort = 48191;
+        public int c_ReceivePort = 48190;       // check it here
 
         private int ReceivePort;
         private int SendPort;
@@ -110,6 +110,7 @@ namespace myApp
             foreach (var ip in ClientList)
             {
                 Sender.Client.BeginSendTo(msg, 0, msg.Length, SocketFlags.None, ip, OnSend, null);
+                Debug.Log("Message has been sent to: " + ip.ToString());
             }
         }
 
@@ -119,11 +120,11 @@ namespace myApp
         {
             Vector3 speed_c = new Vector3();
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            speed_c.x = rigidbody.velocity.x * 2.23693629f;
-            speed_c.y = rigidbody.velocity.y * 2.23693629f;
-            speed_c.z = rigidbody.velocity.z * 2.23693629f;
+            speed_c.x = Convert.ToSingle(rigidbody.velocity.z * 2.23693629f * Math.PI / 180f);
+            speed_c.y = -Convert.ToSingle(rigidbody.velocity.x * 2.23693629f * Math.PI / 180f);
+            speed_c.z = Convert.ToSingle(rigidbody.velocity.y * 2.23693629f * Math.PI / 180f);
             Vector3 speed_a = rigidbody.rotation.eulerAngles;
-            HandlePacket.coord speed = new HandlePacket.coord(speed_c.x, speed_c.y, speed_c.z, speed_a.x, speed_a.y, speed_a.z, 0x01, 2, 1);
+            HandlePacket.coord speed = new HandlePacket.coord(speed_c.x, speed_c.y, speed_c.z, speed_a.x, speed_a.y, speed_a.z, 0x01 | 0x02, 0, 0);
             return speed;
         }
 
@@ -136,17 +137,17 @@ namespace myApp
 
             Vector3 pos_c = go.transform.position;
             Vector3 pos_a = go.transform.localEulerAngles;
-            HandlePacket.coord pos = new HandlePacket.coord(pos_c.x, pos_c.y, pos_c.z, pos_a.x, pos_a.y, pos_a.z, 0x01, 2, 1);
+            HandlePacket.coord pos = new HandlePacket.coord(pos_c.z, -pos_c.x, pos_c.y, Convert.ToSingle(pos_a.z*Math.PI/180f), -Convert.ToSingle(pos_a.x * Math.PI / 180f), Convert.ToSingle(pos_a.y * Math.PI / 180f), 0x01 | 0x02, 0, 0);
             HandlePacket.coord speed = GetMySpeed(go);
-            HandlePacket.coord accel = new HandlePacket.coord(0, 0, 0, 0, 0, 0, 0x01, 2, 1);
-            HandlePacket.geo geo = new HandlePacket.geo(0, 0, 0, 0, 0, 0);
+            HandlePacket.coord accel = new HandlePacket.coord(0, 0, 0, 0, 0, 0, 0x01, 0, 0);
+            HandlePacket.geo geo = new HandlePacket.geo(4.6f, 1.86f, 1.6f, 0.8f, 0, 0.3f);
 
 
             HandlePacket.wheel_o[] wheel_O = new HandlePacket.wheel_o[4];
-            wheel_O[0] = new HandlePacket.wheel_o(8, 0, 7, spare0, 3, 3, 3, 3, 3, spare1);
-            wheel_O[1] = new HandlePacket.wheel_o(8, 1, 7, spare0, 3, 3, 3, 3, 3, spare1);
-            wheel_O[2] = new HandlePacket.wheel_o(8, 2, 7, spare0, 3, 3, 3, 3, 3, spare1);
-            wheel_O[3] = new HandlePacket.wheel_o(8, 3, 7, spare0, 3, 3, 3, 3, 3, spare1);
+            wheel_O[0] = new HandlePacket.wheel_o(1, 0, 0, spare0, 1, -0.025f, 0, 0, 0.5f, spare1);
+            wheel_O[1] = new HandlePacket.wheel_o(1, 1, 0, spare0, 1, -0.025f, 0, 0, 0, spare1);
+            wheel_O[2] = new HandlePacket.wheel_o(1, 2, 0, spare0, 1, -0.025f, 0, 0, 0, spare1);
+            wheel_O[3] = new HandlePacket.wheel_o(1, 3, 0, spare0, 1, -0.025f, 0, 0, 0, spare1);
             HandlePacket.wheel_e[] wheel_E = new HandlePacket.wheel_e[4];
             HandlePacket.wheel[] wheel = new HandlePacket.wheel[4];
             for (int i = 0; i < 4; i++)
@@ -183,11 +184,11 @@ namespace myApp
         {
             // flag1 is the option for "pos"(1) and "speed"(2), flag2 stands for "angular"(0) and "coordinates"(1)
             HandlePacket.coord pos = pkt.State.state_base.pos;
-            Vector3 pos_c = new Vector3(Convert.ToSingle(pos.x), Convert.ToSingle(pos.y), Convert.ToSingle(pos.z));
-            Vector3 pos_a = new Vector3(Convert.ToSingle(pos.h), Convert.ToSingle(pos.p), Convert.ToSingle(pos.r));
+            Vector3 pos_c = new Vector3(-Convert.ToSingle(pos.y), Convert.ToSingle(pos.z), Convert.ToSingle(pos.x));
+            Vector3 pos_a = new Vector3(-Convert.ToSingle(pos.p), Convert.ToSingle(pos.r), Convert.ToSingle(pos.h));
             HandlePacket.coord speed = pkt.State.state_ext.speed;
-            Vector3 speed_c = new Vector3(Convert.ToSingle(speed.x), Convert.ToSingle(speed.y), Convert.ToSingle(speed.z));
-            Vector3 speed_a = new Vector3(Convert.ToSingle(speed.h), Convert.ToSingle(speed.p), Convert.ToSingle(speed.r));
+            Vector3 speed_c = new Vector3(-Convert.ToSingle(speed.y), Convert.ToSingle(speed.z), Convert.ToSingle(speed.x));
+            Vector3 speed_a = new Vector3(-Convert.ToSingle(speed.p), Convert.ToSingle(speed.r), Convert.ToSingle(speed.h));
             if (flag1 == 1)
             {
                 if (flag2)
@@ -368,14 +369,15 @@ namespace myApp
             try
             {
                 buffer = Receiver.EndReceive(ar, ref RefPoint);
-                //Debug.Log("End Receiving");
+                Debug.Log("End Receiving from: " +RefPoint.ToString());
                 testTime1 = DateTime.Now;
 
-                // Add clients
-                IPEP = Conversion(RefPoint);
-                AddClient(IPEP);
+                
                 if (isServer)
                 {
+                    // Add clients
+                    IPEP = Conversion(RefPoint);
+                    AddClient(IPEP);
                     BroadcastMessage(buffer, ClientList);
                 }
 

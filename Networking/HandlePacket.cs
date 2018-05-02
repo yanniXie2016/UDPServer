@@ -27,7 +27,7 @@ namespace myApp
             public header_c(UInt32 dataSize, UInt32 frameNo)
             {
                 this.magicNo = 35712;
-                this.version = 1000;   // no idea
+                this.version = 0x011e;   // no idea
                 this.headerSize = 24;
                 this.dataSize = dataSize;
                 this.frameNo = frameNo;
@@ -537,8 +537,8 @@ namespace myApp
 
         public class Packet
         {
-            public byte[] myArray = new byte[1024];
-            public byte[][] b = new byte[1024][];
+            public byte[] myArray = new byte[712];
+            public byte[][] b = new byte[712][];
             public Serialization serialization = new Serialization();
             public header_c C;
             public header_m[] _M = new header_m[4];
@@ -628,14 +628,14 @@ namespace myApp
                 Packet pkt = new Packet();
                 header_m[] header_M = new header_m[4];
                 header_c header_C;
-                state_o state_O = new state_o(id, 255, 255, 3, hp.myname, geo, pos, 3, 3, 8);
+                state_o state_O = new state_o(id, 1, 1, 0x6, hp.myname, geo, pos, 0, 0, 0);
                 state_e state_E = new state_e(speed, accel, 498.55f, hp.spare);
                 state state = new state(state_O, state_E);
 
-                header_M[3] = new header_m(0, 0, 2, 99);
-                header_M[2] = new header_m(432, 432, 14, 99);
-                header_M[1] = new header_m(656, 656, 9, 99);
-                header_M[0] = new header_m(672, 672, 1, 99);
+                header_M[3] = new header_m(0, 0, 2, 0x0000);
+                header_M[2] = new header_m(416, 104, 14, 0x0000);
+                header_M[1] = new header_m(208, 208, 9, 0x1);
+                header_M[0] = new header_m(0, 0, 1, 0x0000);
                 header_C = new header_c(688, counter);
                 byte[] stream = pkt.FormPacketArray(header_C, header_M[0], header_M[1], state, header_M[2], wheel, header_M[3]);
                 return stream;
