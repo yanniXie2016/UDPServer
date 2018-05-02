@@ -127,7 +127,7 @@ namespace myApp
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
             speed_c = rigidbody.velocity * 2.23693629f;
             speed_a = rigidbody.angularVelocity;  // This is in radians per second
-            HandlePacket.coord speed = new HandlePacket.coord(speed_c.z, -speed_c.x, speed_c.y, speed_a.x, speed_a.y, speed_a.z, 0x01 | 0x02, 0, 0);   // change it here
+            HandlePacket.coord speed = new HandlePacket.coord(speed_c.z, -speed_c.x, speed_c.y, speed_a.y, -speed_a.x, speed_a.z, 0x01 | 0x02, 0, 0);   // change it here
             return speed;
         }
 
@@ -140,7 +140,7 @@ namespace myApp
 
             Vector3 pos_c = go.transform.position;
             Vector3 pos_a = go.transform.localEulerAngles;
-            HandlePacket.coord pos = new HandlePacket.coord(pos_c.z, -pos_c.x, pos_c.y, Convert.ToSingle(pos_a.z*Math.PI/180f), -Convert.ToSingle(pos_a.x * Math.PI / 180f), Convert.ToSingle(pos_a.y * Math.PI / 180f), 0x01 | 0x02, 0, 0);  // change it here
+            HandlePacket.coord pos = new HandlePacket.coord(pos_c.z, -pos_c.x, pos_c.y, Convert.ToSingle(pos_a.y*Math.PI/180f), -Convert.ToSingle(pos_a.x * Math.PI / 180f), Convert.ToSingle(pos_a.z * Math.PI / 180f), 0x01 | 0x02, 0, 0);  // change it here
             HandlePacket.coord speed = GetMySpeed(go);
             HandlePacket.coord accel = new HandlePacket.coord(0, 0, 0, 0, 0, 0, 0x01, 0, 0);
             HandlePacket.geo geo = new HandlePacket.geo(4.6f, 1.86f, 1.6f, 0.8f, 0, 0.3f);
