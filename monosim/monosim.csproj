@@ -297,6 +297,8 @@
     <Compile Include="Assets\Assets\Scripts\CameraPosTargetOrbit.cs" />
     <Compile Include="Assets\Assets\Scripts\follow.cs" />
     <Compile Include="Assets\Assets\Scripts\OrbitCenter.cs" />
+    <Compile Include="Assets\MainPrefeb\HandlePacket.cs" />
+    <Compile Include="Assets\MainPrefeb\Networking.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
