@@ -14,20 +14,18 @@ namespace ClientCSharp
         static int port_client_in = 8887;
         static int port_server_out = 8888;
 
-        public static void CollectStatesFromServer()
+        public static void CollectStatesFromServer(object udpClientObject)
         {
             byte[] data_recv = new byte[2];
+            UdpClient udpClientReceive = (UdpClient)udpClientObject;
 
-            UdpClient udpClientReceive = new UdpClient(port_client_in);
             IPEndPoint remote_ip_endpoint_send = new IPEndPoint(IPAddress.Any, port_server_out);
 
-            for (int i=0; i< n_loops; i++)
+            while(true)
             {
                 data_recv = udpClientReceive.Receive(ref remote_ip_endpoint_send);
                 Console.WriteLine("Received " + (byte)data_recv[1] + " from " + (char)data_recv[0] + " (" + ((EndPoint)remote_ip_endpoint_send).ToString() + ")");
             }
-
-            udpClientReceive.Close();
         }
 
         static void Main(string[] args)
@@ -50,10 +48,18 @@ namespace ClientCSharp
             }
             Console.WriteLine("Client ID: " + (char)data[0] + " Server IP: " + ip_address);
 
-            Thread thread_collect_status = new Thread(new ThreadStart(CollectStatesFromServer));
-            thread_collect_status.Start();
-
+            UdpClient udpClientReceive = new UdpClient(port_client_in);
             UdpClient udpClientSend = new UdpClient(port_client_out);
+
+            Console.CancelKeyPress += delegate {
+                Console.WriteLine("Exit gracefully.");
+                udpClientSend.Close();
+                udpClientReceive.Close();
+            };
+
+            Thread thread_collect_status = new Thread(new ParameterizedThreadStart(CollectStatesFromServer));
+            thread_collect_status.Start(udpClientReceive);
+
             IPEndPoint remote_ip_endpoint_receive = new IPEndPoint(IPAddress.Parse(ip_address), port_server_in);
             udpClientSend.Connect(remote_ip_endpoint_receive);
 
@@ -64,7 +70,10 @@ namespace ClientCSharp
                 Thread.Sleep(200);
             }
 
+            Thread.Sleep(1000);  // Allow for last messages from server to arrive
+            thread_collect_status.Abort();
             udpClientSend.Close();
+            udpClientReceive.Close();
         }
     }
 }

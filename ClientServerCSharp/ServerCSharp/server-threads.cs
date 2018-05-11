@@ -20,7 +20,7 @@ namespace ServerCSharp
             public IPAddress address; // ip address of the client
         }
         static List<Client_message> client_message_list = new List<Client_message>();
-
+        static List<IPAddress> clients = new List<IPAddress>();
 
         public static void CollectStatesFromClient(object udpClientObject)
         {
@@ -41,12 +41,19 @@ namespace ServerCSharp
                     address = remote_ip_endpoint_send.Address
                 };
 
+                if (!clients.Contains(remote_ip_endpoint_send.Address))
+                { 
+                    lock (clients)
+                    {
+                        clients.Add(remote_ip_endpoint_send.Address);
+                    }
+                }
+
                 lock (client_message_list) 
                 {
                     client_message_list.Add(msg);
                 }
             }
-
         }
 
         static void Main(string[] args)
@@ -67,6 +74,8 @@ namespace ServerCSharp
 
             IPEndPoint remote_ip_endpoint_receive = new IPEndPoint(IPAddress.Any, port_client_in);
 
+            Console.WriteLine("Waiting for clients...");
+
             while (true)
             {
                 // Send list of messages
@@ -79,8 +88,15 @@ namespace ServerCSharp
                         {
                             data[0] = (byte)msg.id;
                             data[1] = msg.val;
-                            remote_ip_endpoint_receive.Address = msg.address;
-                            udpServerSend.Send(data, data.Length, remote_ip_endpoint_receive);
+
+                            lock (clients)
+                            {
+                                foreach (IPAddress addr in clients)
+                                {
+                                    remote_ip_endpoint_receive.Address = addr;
+                                    udpServerSend.Send(data, data.Length, remote_ip_endpoint_receive);
+                                }
+                            }
                         }
                         client_message_list.Clear();
                     }
