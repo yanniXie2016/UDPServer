@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B2A68790-571A-4E91-91C4-FFBE8AEFCC11}</ProjectGuid>
+    <ProjectGuid>{E7F126FB-7516-4962-9A25-040C77796F9D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>ServerCSharp</RootNamespace>
     <AssemblyName>server</AssemblyName>
@@ -42,8 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="server.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
