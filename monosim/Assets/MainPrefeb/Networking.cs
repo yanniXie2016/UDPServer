@@ -16,20 +16,21 @@ namespace myApp
 {
     [RequireComponent(typeof(HandlePacket))]
     [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(CarController))]
     public class Networking : MonoBehaviour
     {
         #region Parameters
 
         //parameters for networking
-        public bool isServer = true;
-        public static string serverAddress = "169.254.145.12";  // change it here
+        public bool isServer;
+        public bool isHost;
+        public static string viresServer = "169.254.145.12";  // change it here
+        public static string unityServer = "10.246.139.61";  // change it here
         private List<IPEndPoint> ClientList = new List<IPEndPoint>();
 
-        public int s_SendPort = 48190;
-        public int s_ReceivePort = 48191;
-        public int c_SendPort = 48191;
-        public int c_ReceivePort = 48190;       // check it here
+        public int s_SendPort;
+        public int s_ReceivePort;
+        public int c_SendPort;
+        public int c_ReceivePort;  // check it here
 
         private int ReceivePort;
         private int SendPort;
@@ -44,24 +45,31 @@ namespace myApp
         private byte[] buffer = new byte[50];
         public UInt32 counter = 1;
         private UInt32 maxNo = 0;
-        private int[] lens = { 24, 16, 16, 208, 16, 104, 104, 104, 104, 16 };
+        //private int[] lens = { 24, 16, 16, 208, 16, 104, 104, 104, 104, 16 };
+        private int[] lens = { 24, 16, 16, 208, 16, 44, 44, 44, 44, 16 };
         private RingBuffer[] MsgQueue = new RingBuffer[10];
         private HandlePacket hp;
         private UInt32 m_Id;
         private System.Diagnostics.Stopwatch stopwatch1 = new System.Diagnostics.Stopwatch();
         public double simTime;
+        private float travelDistance = 0f;
+        private float radius;
 
         // parameters for vehicle behaviour
         public GameObject EgoVehicle;
         public GameObject Geometry;
-        public GameObject[] PrefabList = new GameObject[1];
+        public GameObject[] PrefabList = new GameObject[2];
         public GameObject[] PlayerList;
+        private GameObject[] GeoList;
+        private Rigidbody[] RigidList;
         private List<UInt32> IdList;
-        private Vector3 CurrentVelocity = new Vector3(0, 0, 0);
-        private Vector3 CurrentPosition = new Vector3(0, 0, 0);
-        private Quaternion CurrentRotation = new Quaternion();
+        private Vector3[] CurrentVelocity;
+        private Vector3[] CurrentPosition;
+        private Vector3[] CurrentRotation;
         public int smoothFlag;
         private CarController carController;
+        public bool dummyRigid;
+        private GameObject myDummy;
 
         // parameters for statistical analysis based on tests
         private DateTime testTime1;
@@ -78,10 +86,6 @@ namespace myApp
         #region DetailFunctions
 
         // related to networking
-        public void StartToReceive()
-        {
-            this.Receiver.BeginReceive(OnReceive, null);
-        }
 
         public IPEndPoint Conversion(IPEndPoint ipep)
         {
@@ -128,32 +132,19 @@ namespace myApp
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
             speed_c = rigidbody.velocity * 2.23693629f;
             speed_a = rigidbody.angularVelocity;  // This is in radians per second
-            HandlePacket.coord speed = new HandlePacket.coord(speed_c.z, -speed_c.x, speed_c.y, -speed_a.y, -speed_a.x, speed_a.z, 0x01 | 0x02, 0, 0);   // change it here
+            HandlePacket.coord speed = new HandlePacket.coord(speed_c.z, -speed_c.x, speed_c.y, -speed_a.y, speed_a.x, speed_a.z, 0x01 | 0x02, 0, 0);   // change it here
             return speed;
         }
 
-        public byte[] ClientWritePacket(GameObject go, UInt32 count)
+        public float GetMyRotAngle()
         {
-            byte[] spare0 = new byte[2];
-            UInt32[] spare1 = new UInt32[4];
-            UInt32[] spare2 = new UInt32[4];
-            float[] xyz = new float[3];
+            travelDistance = carController.CurrentSpeed/ 2.23693629f * Time.deltaTime+travelDistance;
+            float angle = travelDistance / radius  %(2 * Mathf.PI);
+            return angle; 
+        }
 
-            //Vector3 pos_c = go.transform.position;
-            //Vector3 pos_a = go.transform.localEulerAngles;
-            Vector3 pos_c = Geometry.transform.position;
-            Vector3 pos_a = Geometry.transform.eulerAngles;
-            HandlePacket.coord pos = new HandlePacket.coord(pos_c.z, -pos_c.x, pos_c.y, Convert.ToSingle(-pos_a.y*Math.PI/180f), Convert.ToSingle(-pos_a.x * Math.PI / 180f), Convert.ToSingle(pos_a.z * Math.PI / 180f), 0x01 | 0x02, 0, 0);  // change it here
-            HandlePacket.coord speed = GetMySpeed(go);
-            HandlePacket.coord accel = new HandlePacket.coord(0, 0, 0, 0, 0, 0, 0x01, 0, 0);
-            HandlePacket.geo geo = new HandlePacket.geo(4.6f, 1.86f, 1.6f, 0.8f, 0, 0.3f);
-
-
-            HandlePacket.wheel_o[] wheel_O = new HandlePacket.wheel_o[4];
-            wheel_O[0] = new HandlePacket.wheel_o(1, 0, 0, spare0, 1, -0.025f, 0, 0, 0.5f, spare1);
-            wheel_O[1] = new HandlePacket.wheel_o(1, 1, 0, spare0, 1, -0.025f, 0, 0, carController.CurrentSteerAngle, spare1);
-            wheel_O[2] = new HandlePacket.wheel_o(1, 2, 0, spare0, 1, -0.025f, 0, 0, 0, spare1);
-            wheel_O[3] = new HandlePacket.wheel_o(1, 3, 0, spare0, 1, -0.025f, 0, 0, 0, spare1);
+        public HandlePacket.wheel[] WheelExtensions(HandlePacket.wheel_o[] wheel_O)
+        {
             HandlePacket.wheel_e[] wheel_E = new HandlePacket.wheel_e[4];
             HandlePacket.wheel[] wheel = new HandlePacket.wheel[4];
             for (int i = 0; i < 4; i++)
@@ -161,8 +152,30 @@ namespace myApp
                 wheel_E[i] = new HandlePacket.wheel_e();
                 wheel[i] = new HandlePacket.wheel(wheel_O[i], wheel_E[i]);
             }
+            return wheel;
+        }
+
+        public byte[] ClientWritePacket(GameObject go, UInt32 count)
+        {
+            byte[] spare0 = new byte[2];
+            UInt32[] spare1 = new UInt32[4];
+
+            Vector3 pos_c = Geometry.transform.position;
+            Vector3 pos_a = Geometry.transform.eulerAngles;
+            HandlePacket.coord pos = new HandlePacket.coord(pos_c.z, -pos_c.x, pos_c.y, Convert.ToSingle(-pos_a.y*Math.PI/180f), Convert.ToSingle(pos_a.x * Math.PI / 180f), Convert.ToSingle(pos_a.z * Math.PI / 180f), 0x01 | 0x02, 0, 0);  // change it here
+            HandlePacket.coord speed = GetMySpeed(go);
+            HandlePacket.coord accel = new HandlePacket.coord(0, 0, 0, 0, 0, 0, 0x01, 0, 0);
+            HandlePacket.geo geo = new HandlePacket.geo(4.6f, 1.86f, 1.6f, 0.8f, 0, 0.3f);
+            
+            HandlePacket.wheel_o[] wheel_O = new HandlePacket.wheel_o[4];
+            float rotAngle = GetMyRotAngle();
+            wheel_O[0] = new HandlePacket.wheel_o(1, 0, 0, spare0, 1, -0.025f, rotAngle / 180 * Mathf.PI, 0, -carController.CurrentSteerAngle / 180 * Mathf.PI, spare1);
+            wheel_O[1] = new HandlePacket.wheel_o(1, 1, 0, spare0, 1, -0.025f, rotAngle / 180 * Mathf.PI, 0, -carController.CurrentSteerAngle / 180 * Mathf.PI, spare1);
+            wheel_O[2] = new HandlePacket.wheel_o(1, 2, 0, spare0, 1, -0.025f, rotAngle / 180 * Mathf.PI, 0, 0, spare1);
+            wheel_O[3] = new HandlePacket.wheel_o(1, 3, 0, spare0, 1, -0.025f, rotAngle / 180 * Mathf.PI, 0, 0, spare1);
+     
             simTime = stopwatch1.Elapsed.TotalSeconds;
-            buffer = HandlePacket.Catch.CatchPacket(simTime, m_Id, geo, pos, speed, accel, count, wheel);
+            buffer = HandlePacket.Catch.CatchPacket(simTime, m_Id, geo, pos, speed, accel, count, wheel_O);
             return buffer;
         }
 
@@ -173,28 +186,22 @@ namespace myApp
             return pkt_n;
         }
 
-        public DateTime GetTime(HandlePacket.Packet pkt)
-        {
-            double theTime = pkt.C.simTime;
-            DateTime myTime = DateTime.FromOADate(theTime);
-            return myTime;
-        }
-
-        public UInt32 GetID(HandlePacket.Packet pkt)
+        public UInt32 ParseID(HandlePacket.Packet pkt)
         {
             UInt32 theId = pkt.State.state_base.id;
             return theId;
         }
 
-        public Vector3 GetCoord(HandlePacket.Packet pkt, int flag1, bool flag2)
+        public Vector3 ParseCoord(HandlePacket.Packet pkt, int flag1, bool flag2)
         {
             // flag1 is the option for "pos"(1) and "speed"(2), flag2 stands for "angular"(0) and "coordinates"(1)
             HandlePacket.coord pos = pkt.State.state_base.pos;
-            Vector3 pos_c = new Vector3(-Convert.ToSingle(pos.y), Convert.ToSingle(pos.z), Convert.ToSingle(pos.x));
-            Vector3 pos_a = new Vector3(-Convert.ToSingle(pos.p), Convert.ToSingle(pos.r), Convert.ToSingle(pos.h));
             HandlePacket.coord speed = pkt.State.state_ext.speed;
-            Vector3 speed_c = new Vector3(-Convert.ToSingle(speed.y), Convert.ToSingle(speed.z), Convert.ToSingle(speed.x));
-            Vector3 speed_a = new Vector3(-Convert.ToSingle(speed.p), Convert.ToSingle(speed.r), Convert.ToSingle(speed.h));
+            Vector3 pos_c, pos_a, speed_c, speed_a = new Vector3();
+            pos_c = new Vector3(-Convert.ToSingle(pos.y), Convert.ToSingle(pos.z), Convert.ToSingle(pos.x));
+            pos_a = new Vector3(Convert.ToSingle(pos.p * 180f / Mathf.PI), Convert.ToSingle(-pos.h * 180f / Mathf.PI), Convert.ToSingle(pos.r * 180f / Mathf.PI));
+            speed_c = new Vector3(-Convert.ToSingle(speed.y), Convert.ToSingle(speed.z), Convert.ToSingle(speed.x));
+            speed_a = new Vector3(Convert.ToSingle(speed.p), Convert.ToSingle(-speed.h), Convert.ToSingle(speed.r));
             if (flag1 == 1)
             {
                 if (flag2)
@@ -228,31 +235,36 @@ namespace myApp
 
         public void Extrapolation(UInt32 i)
         {
-            Vector3 target = CurrentPosition + Time.deltaTime * CurrentVelocity;
-            switch(smoothFlag)
+            Vector3 target = CurrentPosition[i] + Time.deltaTime * CurrentVelocity[i];
+            switch (smoothFlag)
             {
                 case 0:
-                    PlayerList[i].transform.position = target;
+                    GeoList[i].transform.position = target;
                     break;
                 case 1:
-                    PlayerList[i].transform.position = Vector3.SmoothDamp(CurrentPosition, target, ref CurrentVelocity, Time.deltaTime);
+                    GeoList[i].transform.position = Vector3.SmoothDamp(CurrentPosition[i], target, ref CurrentVelocity[i], Time.deltaTime);
                     break;
                 case 2:
-                    PlayerList[i].transform.position = Vector3.Lerp(CurrentPosition, target, Time.deltaTime * CurrentVelocity.magnitude);
+                    GeoList[i].transform.position = Vector3.Lerp(CurrentPosition[i], target, Time.deltaTime * CurrentVelocity[i].magnitude);
                     break;
             }
-            CurrentPosition = PlayerList[i].transform.position;
-            Debug.Log("Predicted Position: " + PlayerList[i].transform.position);
-            PlayerList[i].transform.localRotation = CurrentRotation;
+            CurrentPosition[i] = GeoList[i].transform.position;
+            Debug.Log("Predicted Position: " + CurrentPosition[i]);
+            GeoList[i].transform.eulerAngles = CurrentRotation[i];
         }
 
         public void GenerateObject(HandlePacket.Packet pkt)
         {
-            UInt32 id = GetID(pkt);
-            Vector3 SpawnLocation = GetCoord(pkt, 1, true);
-            Vector3 SpawnRotation = GetCoord(pkt, 1, false);
-            PlayerList[id] = Instantiate(PrefabList[0], SpawnLocation, Quaternion.Euler(SpawnRotation.x, SpawnRotation.y, SpawnRotation.z)) as GameObject;
-            CurrentPosition = SpawnLocation;
+            UInt32 id = ParseID(pkt);
+            Vector3 SpawnLocation = ParseCoord(pkt, 1, true);
+            Vector3 SpawnRotation = ParseCoord(pkt, 1, false);
+            PlayerList[id] = Instantiate(myDummy, SpawnLocation, Quaternion.Euler(SpawnRotation.x, SpawnRotation.y, SpawnRotation.z)) as GameObject;
+            CurrentPosition[id] = SpawnLocation;
+            GeoList[id] = PlayerList[id].transform.GetChild(4).gameObject;
+            if(dummyRigid)
+            {
+                RigidList[id] = PlayerList[id].GetComponent<Rigidbody>();
+            }
         }
 
         #endregion
@@ -261,43 +273,74 @@ namespace myApp
 
         void Init()
         {
-            stopwatch1.Start();
+            stopwatch1.Start();           
             hp = GetComponent<HandlePacket>();
-            carController = GetComponent<CarController>();
+            carController = EgoVehicle.GetComponent<CarController>();
             PlayerList = new GameObject[10];
+            GeoList = new GameObject[10];
+            if(dummyRigid)
+            {
+                RigidList = new Rigidbody[10];
+                myDummy = PrefabList[0];
+            }
+            else
+            {
+                myDummy = PrefabList[1];
+            }
+            CurrentPosition = new Vector3[10];
+            CurrentRotation = new Vector3[10];
+            CurrentVelocity = new Vector3[10];
             IdList = new List<UInt32>();
             m_Id = hp.m_ID;
             IdList.Add(m_Id);
             for (int i = 0; i < 10; i++)
             {
                 MsgQueue[i] = new RingBuffer(100);
+                CurrentPosition[i] = new Vector3(0, 0, 0);
+                CurrentRotation[i] = new Vector3(0, 0, 0);
+                CurrentVelocity[i] = new Vector3(0, 0, 0);
             }
+            GameObject wheelhub = EgoVehicle.transform.GetChild(2).gameObject;
+            GameObject wheel1 = wheelhub.transform.GetChild(1).gameObject;
+            radius = wheel1.GetComponent<WheelCollider>().radius;
         }
 
         void Awake()
         {
             Init();
+            if(isHost)
+            {
+                this.SendPort = s_SendPort;
+                this.ReceivePort = s_ReceivePort;
+                Debug.Log("This is a host");
+                this.Objective = new IPEndPoint(IPAddress.Any, c_ReceivePort);
+                this.RefPoint = new IPEndPoint(IPAddress.Any, c_SendPort);
+            }
+
             if (isServer)
             {
                 this.ReceivePort = s_ReceivePort;
                 this.SendPort = s_SendPort;
-                Debug.Log("Server started, servicing on port {0}:" + serverAddress + this.ReceivePort);
+                Debug.Log("Server started, servicing on: " + unityServer + ": "+this.ReceivePort);
                 this.Objective = new IPEndPoint(IPAddress.Any, c_ReceivePort);
                 this.RefPoint = new IPEndPoint(IPAddress.Any, c_SendPort);
+                //IPEndPoint vires = new IPEndPoint(IPAddress.Parse(viresServer), c_ReceivePort);
+                //this.ClientList.Add(vires);
             }
             else
             {
                 this.ReceivePort = c_ReceivePort;
                 this.SendPort = c_SendPort;
                 Debug.Log("This is a client");
-                this.Objective = new IPEndPoint(IPAddress.Parse(serverAddress), s_ReceivePort);
-                this.RefPoint = new IPEndPoint(IPAddress.Parse(serverAddress), s_SendPort);
+                this.Objective = new IPEndPoint(IPAddress.Parse(unityServer), s_ReceivePort);
+                this.RefPoint = new IPEndPoint(IPAddress.Parse(unityServer), s_SendPort);
                 this.ClientList.Add(this.Objective);
             }
             this.Sender = new UdpClient(this.SendPort);
             this.Receiver = new UdpClient(this.ReceivePort);
             // Receiving Message
             this.StartToReceive();
+            Debug.Log("Start");
         }
 
         void Update()
@@ -351,7 +394,7 @@ namespace myApp
                 }
             }
 
-            if (!isServer)
+            if ((!isServer) || (isHost))
             {
                 buffer = ClientWritePacket(EgoVehicle, counter);
                 BroadcastMessage(buffer, ClientList);
@@ -372,16 +415,21 @@ namespace myApp
             Receiver.Close();
         }
 
+        public void StartToReceive()
+        {
+            this.Receiver.BeginReceive(OnReceive, null);
+            Debug.Log("In Start");
+        }
+
         public void OnReceive(IAsyncResult ar)
         {
             try
             {
+                Debug.Log("In");
                 buffer = Receiver.EndReceive(ar, ref RefPoint);
                 Debug.Log("End Receiving from: " +RefPoint.ToString());
-                testTime1 = DateTime.Now;
-
                 
-                if (isServer)
+                if (isServer|| isHost)
                 {
                     // Add clients
                     IPEP = Conversion(RefPoint);
@@ -390,7 +438,7 @@ namespace myApp
                 }
 
                 HandlePacket.Packet pkt_n = ParsePacket(buffer, lens);
-                UInt32 ID = GetID(pkt_n);
+                UInt32 ID = ParseID(pkt_n);
                 if (!IdList.Contains(ID))
                 {
                     IdList.Add(ID);
@@ -430,7 +478,7 @@ namespace myApp
 
         public void MySyncVar(HandlePacket.Packet pkt)
         {
-            UInt32 id = GetID(pkt);
+            UInt32 id = ParseID(pkt);
             if (PlayerList[id] == null)
             {
                 GenerateObject(pkt);
@@ -445,26 +493,39 @@ namespace myApp
             else
             {
                 maxNo = _no;
-                Vector3 pos_c = GetCoord(pkt, 1, true);
-                Vector3 vel_c = GetCoord(pkt, 2, true);
+                Vector3 vel_c = ParseCoord(pkt, 2, true);               
+                CurrentVelocity[id] = vel_c/ 2.23693629f;
+
+                Vector3 vel_a = ParseCoord(pkt, 2, false);
+                
+                if(dummyRigid)
+                {
+                    RigidList[id].velocity = vel_c/ 2.23693629f;
+                    RigidList[id].angularVelocity = vel_a;
+                }
+
+                Vector3 pos_c = ParseCoord(pkt, 1, true);
                 switch (smoothFlag)
                 {
                     case 0:
-                        PlayerList[id].transform.position = pos_c;
+                        GeoList[id].transform.position = pos_c;
                         break;
                     case 1:
-                        PlayerList[id].transform.position = Vector3.SmoothDamp(CurrentPosition, pos_c, ref vel_c, Time.deltaTime);
+                        GeoList[id].transform.position = Vector3.SmoothDamp(CurrentPosition[id], pos_c, ref vel_c, Time.deltaTime);
                         break;
                     case 2:
-                        PlayerList[id].transform.position = Vector3.Lerp(CurrentPosition, pos_c, Time.deltaTime * vel_c.magnitude);
+                        GeoList[id].transform.position = Vector3.Lerp(CurrentPosition[id], pos_c, Time.deltaTime * vel_c.magnitude);
                         break;
-                } 
-                CurrentPosition = PlayerList[id].transform.position;
-                CurrentVelocity = vel_c;
-                Debug.Log(PlayerList[id].transform.position);
-                Vector3 pos_a = GetCoord(pkt, 1, false);
-                PlayerList[id].transform.localRotation = Quaternion.Euler(pos_a.x, pos_a.y, pos_a.z);
-                CurrentRotation = PlayerList[id].transform.localRotation;
+                }
+                CurrentPosition[id] = GeoList[id].transform.position;
+                Debug.Log("Get Position: " + CurrentPosition[id]);
+
+                Vector3 pos_a = ParseCoord(pkt, 1, false);
+                GeoList[id].transform.eulerAngles = pos_a;
+                CurrentRotation[id] = GeoList[id].transform.eulerAngles;
+
+               
+                
             }
 
         }

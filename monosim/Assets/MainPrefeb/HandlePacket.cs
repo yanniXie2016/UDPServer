@@ -542,22 +542,24 @@ namespace myApp
 
         public class Packet
         {
-            public byte[] myArray = new byte[712];
-            public byte[][] b = new byte[712][];
+            //public byte[] myArray = new byte[712];
+            //public byte[][] b = new byte[712][];
+            public byte[] myArray = new byte[472];
+            public byte[][] b = new byte[472][];
             public Serialization serialization = new Serialization();
             public header_c C;
             public header_m[] _M = new header_m[4];
             public state State;
-            public wheel[] Wheel = new wheel[4];
+            public wheel_o[] Wheel_O = new wheel_o[4];
 
-            public Packet(header_c C, header_m M0, header_m M1, state State, header_m M2, wheel[] wheel, header_m M3)
+            public Packet(header_c C, header_m M0, header_m M1, state State, header_m M2, wheel_o[] wheel_O, header_m M3)
             {
                 this.C = C;
                 this._M[0] = M0;
                 this._M[1] = M1;
                 this._M[2] = M2;
                 this.State = State;
-                this.Wheel = wheel;
+                this.Wheel_O = wheel_O;
                 this._M[3] = M3;
              }
 
@@ -589,17 +591,17 @@ namespace myApp
                 return b;
             }
 
-            public byte[] FormPacketArray(header_c header_C, header_m header_M0, header_m header_M1, state state, header_m header_M2, wheel[] wheel, header_m header_M3)
+            public byte[] FormPacketArray(header_c header_C, header_m header_M0, header_m header_M1, state state, header_m header_M2, wheel_o[] wheel_O, header_m header_M3)
             {
                 byte[] a1 = serialization.Serialize(header_C);
                 byte[] a2 = serialization.Serialize(header_M0);
                 byte[] a3 = serialization.Serialize(header_M1);
                 byte[] a4 = serialization.Serialize(state);
                 byte[] a5 = serialization.Serialize(header_M2);
-                byte[] a6 = serialization.Serialize(wheel[0]);
-                byte[] a7 = serialization.Serialize(wheel[1]);
-                byte[] a8 = serialization.Serialize(wheel[2]);
-                byte[] a9 = serialization.Serialize(wheel[3]);
+                byte[] a6 = serialization.Serialize(wheel_O[0]);
+                byte[] a7 = serialization.Serialize(wheel_O[1]);
+                byte[] a8 = serialization.Serialize(wheel_O[2]);
+                byte[] a9 = serialization.Serialize(wheel_O[3]);
                 byte[] a10 = serialization.Serialize(header_M3);
                 myArray = Combine(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
                 return myArray;
@@ -608,19 +610,19 @@ namespace myApp
             public Packet Parse(byte[] DataStream, int[] lens)
             {
                 Packet pkt;
-                wheel[] myWheel = new wheel[4];
+                wheel_o[] myWheel_O = new wheel_o[4];
                 b = Split(DataStream, lens);
                 header_c _header_C = new header_c(b[0]);
                 header_m _header_M0 = new header_m(b[1]);
                 header_m _header_M1 = new header_m(b[2]);
                 state _state = new state(b[3]);
                 header_m _header_M2 = new header_m(b[4]);
-                myWheel[0] = new wheel(b[5]);
-                myWheel[1] = new wheel(b[6]);
-                myWheel[2] = new wheel(b[7]);
-                myWheel[3] = new wheel(b[8]);
+                myWheel_O[0] = new wheel_o(b[5]);
+                myWheel_O[1] = new wheel_o(b[6]);
+                myWheel_O[2] = new wheel_o(b[7]);
+                myWheel_O[3] = new wheel_o(b[8]);
                 header_m _header_M3 = new header_m(b[9]);
-                pkt = new Packet(_header_C, _header_M0, _header_M1, _state, _header_M2, myWheel, _header_M3);
+                pkt = new Packet(_header_C, _header_M0, _header_M1, _state, _header_M2, myWheel_O, _header_M3);
                 return pkt;
             }
 
@@ -628,7 +630,7 @@ namespace myApp
 
         public class Catch
         {
-            public static byte[] CatchPacket(double simTime, UInt32 id, geo geo, coord pos, coord speed, coord accel, UInt32 counter, wheel[] wheel)
+            public static byte[] CatchPacket(double simTime, UInt32 id, geo geo, coord pos, coord speed, coord accel, UInt32 counter, wheel_o[] wheel_O)
             {
                 Packet pkt = new Packet();
                 header_m[] header_M = new header_m[4];
@@ -638,11 +640,11 @@ namespace myApp
                 state state = new state(state_O, state_E);
 
                 header_M[3] = new header_m(0, 0, 2, 0x0000);
-                header_M[2] = new header_m(416, 104, 14, 0x0000);
+                header_M[2] = new header_m(176, 44, 14, 0x0000);
                 header_M[1] = new header_m(208, 208, 9, 0x1);
                 header_M[0] = new header_m(0, 0, 1, 0x0000);
-                header_C = new header_c(688, counter, simTime);
-                byte[] stream = pkt.FormPacketArray(header_C, header_M[0], header_M[1], state, header_M[2], wheel, header_M[3]);
+                header_C = new header_c(448, counter, simTime);
+                byte[] stream = pkt.FormPacketArray(header_C, header_M[0], header_M[1], state, header_M[2], wheel_O, header_M[3]);
                 return stream;
             }
 

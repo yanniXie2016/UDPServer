@@ -148,7 +148,6 @@ namespace UnityStandardAssets.Vehicles.Car
             m_SteerAngle = steering*m_MaximumSteerAngle;
             m_WheelColliders[0].steerAngle = m_SteerAngle;
             m_WheelColliders[1].steerAngle = m_SteerAngle;
-
             SteerHelper();
             ApplyDrive(accel, footbrake);
             CapSpeed();
