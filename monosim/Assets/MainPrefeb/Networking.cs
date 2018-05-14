@@ -21,9 +21,10 @@ namespace myApp
         #region Parameters
 
         //parameters for networking
-        public bool isServer = true;
+        public bool isServer;
+        public bool isHost;
         public static string viresServer = "169.254.145.12";  // change it here
-        public static string unityServer = "169.254.145.12";  // change it here
+        public static string unityServer = "10.246.139.61";  // change it here
         private List<IPEndPoint> ClientList = new List<IPEndPoint>();
 
         public int s_SendPort;
@@ -57,7 +58,7 @@ namespace myApp
         // parameters for vehicle behaviour
         public GameObject EgoVehicle;
         public GameObject Geometry;
-        public GameObject[] PrefabList = new GameObject[1];
+        public GameObject[] PrefabList = new GameObject[2];
         public GameObject[] PlayerList;
         private GameObject[] GeoList;
         private Rigidbody[] RigidList;
@@ -67,6 +68,8 @@ namespace myApp
         private Vector3[] CurrentRotation;
         public int smoothFlag;
         private CarController carController;
+        public bool dummyRigid;
+        private GameObject myDummy;
 
         // parameters for statistical analysis based on tests
         private DateTime testTime1;
@@ -83,10 +86,6 @@ namespace myApp
         #region DetailFunctions
 
         // related to networking
-        public void StartToReceive()
-        {
-            this.Receiver.BeginReceive(OnReceive, null);
-        }
 
         public IPEndPoint Conversion(IPEndPoint ipep)
         {
@@ -120,7 +119,6 @@ namespace myApp
             foreach (var ip in ClientList)
             {
                 Sender.Client.BeginSendTo(msg, 0, msg.Length, SocketFlags.None, ip, OnSend, null);
-                Debug.Log("length is: " + msg.Length.ToString());
                 Debug.Log("Message has been sent to: " + ip.ToString());
             }
         }
@@ -171,10 +169,10 @@ namespace myApp
             
             HandlePacket.wheel_o[] wheel_O = new HandlePacket.wheel_o[4];
             float rotAngle = GetMyRotAngle();
-            wheel_O[0] = new HandlePacket.wheel_o(1, 0, 0, spare0, 1, -0.025f, rotAngle, 0, carController.CurrentSteerAngle, spare1);
-            wheel_O[1] = new HandlePacket.wheel_o(1, 1, 0, spare0, 1, -0.025f, rotAngle, 0, carController.CurrentSteerAngle, spare1);
-            wheel_O[2] = new HandlePacket.wheel_o(1, 2, 0, spare0, 1, -0.025f, rotAngle, 0, 0, spare1);
-            wheel_O[3] = new HandlePacket.wheel_o(1, 3, 0, spare0, 1, -0.025f, rotAngle, 0, 0, spare1);
+            wheel_O[0] = new HandlePacket.wheel_o(1, 0, 0, spare0, 1, -0.025f, rotAngle / 180 * Mathf.PI, 0, -carController.CurrentSteerAngle / 180 * Mathf.PI, spare1);
+            wheel_O[1] = new HandlePacket.wheel_o(1, 1, 0, spare0, 1, -0.025f, rotAngle / 180 * Mathf.PI, 0, -carController.CurrentSteerAngle / 180 * Mathf.PI, spare1);
+            wheel_O[2] = new HandlePacket.wheel_o(1, 2, 0, spare0, 1, -0.025f, rotAngle / 180 * Mathf.PI, 0, 0, spare1);
+            wheel_O[3] = new HandlePacket.wheel_o(1, 3, 0, spare0, 1, -0.025f, rotAngle / 180 * Mathf.PI, 0, 0, spare1);
      
             simTime = stopwatch1.Elapsed.TotalSeconds;
             buffer = HandlePacket.Catch.CatchPacket(simTime, m_Id, geo, pos, speed, accel, count, wheel_O);
@@ -244,7 +242,7 @@ namespace myApp
                     GeoList[i].transform.position = target;
                     break;
                 case 1:
-                    GeoList[i].transform.position = Vector3.SmoothDamp(CurrentPosition[i], target, ref CurrentVelocity[i], Time.deltaTime*5);
+                    GeoList[i].transform.position = Vector3.SmoothDamp(CurrentPosition[i], target, ref CurrentVelocity[i], Time.deltaTime);
                     break;
                 case 2:
                     GeoList[i].transform.position = Vector3.Lerp(CurrentPosition[i], target, Time.deltaTime * CurrentVelocity[i].magnitude);
@@ -260,10 +258,13 @@ namespace myApp
             UInt32 id = ParseID(pkt);
             Vector3 SpawnLocation = ParseCoord(pkt, 1, true);
             Vector3 SpawnRotation = ParseCoord(pkt, 1, false);
-            PlayerList[id] = Instantiate(PrefabList[0], SpawnLocation, Quaternion.Euler(SpawnRotation.x, SpawnRotation.y, SpawnRotation.z)) as GameObject;
+            PlayerList[id] = Instantiate(myDummy, SpawnLocation, Quaternion.Euler(SpawnRotation.x, SpawnRotation.y, SpawnRotation.z)) as GameObject;
             CurrentPosition[id] = SpawnLocation;
             GeoList[id] = PlayerList[id].transform.GetChild(4).gameObject;
-            RigidList[id] = PlayerList[id].GetComponent<Rigidbody>();
+            if(dummyRigid)
+            {
+                RigidList[id] = PlayerList[id].GetComponent<Rigidbody>();
+            }
         }
 
         #endregion
@@ -277,7 +278,15 @@ namespace myApp
             carController = EgoVehicle.GetComponent<CarController>();
             PlayerList = new GameObject[10];
             GeoList = new GameObject[10];
-            RigidList = new Rigidbody[10];
+            if(dummyRigid)
+            {
+                RigidList = new Rigidbody[10];
+                myDummy = PrefabList[0];
+            }
+            else
+            {
+                myDummy = PrefabList[1];
+            }
             CurrentPosition = new Vector3[10];
             CurrentRotation = new Vector3[10];
             CurrentVelocity = new Vector3[10];
@@ -299,6 +308,15 @@ namespace myApp
         void Awake()
         {
             Init();
+            if(isHost)
+            {
+                this.SendPort = s_SendPort;
+                this.ReceivePort = s_ReceivePort;
+                Debug.Log("This is a host");
+                this.Objective = new IPEndPoint(IPAddress.Any, c_ReceivePort);
+                this.RefPoint = new IPEndPoint(IPAddress.Any, c_SendPort);
+            }
+
             if (isServer)
             {
                 this.ReceivePort = s_ReceivePort;
@@ -322,6 +340,7 @@ namespace myApp
             this.Receiver = new UdpClient(this.ReceivePort);
             // Receiving Message
             this.StartToReceive();
+            Debug.Log("Start");
         }
 
         void Update()
@@ -375,7 +394,7 @@ namespace myApp
                 }
             }
 
-            if (!isServer)
+            if ((!isServer) || (isHost))
             {
                 buffer = ClientWritePacket(EgoVehicle, counter);
                 BroadcastMessage(buffer, ClientList);
@@ -396,14 +415,21 @@ namespace myApp
             Receiver.Close();
         }
 
+        public void StartToReceive()
+        {
+            this.Receiver.BeginReceive(OnReceive, null);
+            Debug.Log("In Start");
+        }
+
         public void OnReceive(IAsyncResult ar)
         {
             try
             {
+                Debug.Log("In");
                 buffer = Receiver.EndReceive(ar, ref RefPoint);
                 Debug.Log("End Receiving from: " +RefPoint.ToString());
                 
-                if (isServer)
+                if (isServer|| isHost)
                 {
                     // Add clients
                     IPEP = Conversion(RefPoint);
@@ -467,12 +493,16 @@ namespace myApp
             else
             {
                 maxNo = _no;
-                Vector3 vel_c = ParseCoord(pkt, 2, true);
-                RigidList[id].velocity = vel_c/ 2.23693629f;
-                CurrentVelocity[id] = RigidList[id].velocity* 2.23693629f;
+                Vector3 vel_c = ParseCoord(pkt, 2, true);               
+                CurrentVelocity[id] = vel_c/ 2.23693629f;
 
                 Vector3 vel_a = ParseCoord(pkt, 2, false);
-                RigidList[id].angularVelocity = vel_a;
+                
+                if(dummyRigid)
+                {
+                    RigidList[id].velocity = vel_c/ 2.23693629f;
+                    RigidList[id].angularVelocity = vel_a;
+                }
 
                 Vector3 pos_c = ParseCoord(pkt, 1, true);
                 switch (smoothFlag)
@@ -481,7 +511,7 @@ namespace myApp
                         GeoList[id].transform.position = pos_c;
                         break;
                     case 1:
-                        GeoList[id].transform.position = Vector3.SmoothDamp(CurrentPosition[id], pos_c, ref vel_c, Time.deltaTime*5);
+                        GeoList[id].transform.position = Vector3.SmoothDamp(CurrentPosition[id], pos_c, ref vel_c, Time.deltaTime);
                         break;
                     case 2:
                         GeoList[id].transform.position = Vector3.Lerp(CurrentPosition[id], pos_c, Time.deltaTime * vel_c.magnitude);
