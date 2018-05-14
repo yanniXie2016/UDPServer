@@ -10,7 +10,7 @@
  
 #define BUFLEN 512  //Max length of buffer
 #define PORT 8888   //The port on which to listen for incoming data
- 
+
 int main()
 {
     SOCKET socket_server;
@@ -58,7 +58,7 @@ int main()
          
         //clear the buffer by filling null, it might have previously received data
         memset(buf,'\0', BUFLEN);
-         
+       
         //try to receive some data, this is a blocking call
         if ((recv_len = recvfrom(socket_server, buf, BUFLEN, 0, (struct sockaddr *) &from, &from_len)) == SOCKET_ERROR)
         {
