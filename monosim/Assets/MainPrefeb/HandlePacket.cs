@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-//using UnityEngine;
-//using UnityEngine.UI;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace myApp
 {
-    public class HandlePacket
+    public class HandlePacket : MonoBehaviour
     {
 
         private char[] myname = new char[32];
