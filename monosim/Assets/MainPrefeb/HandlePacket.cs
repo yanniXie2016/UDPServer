@@ -631,7 +631,7 @@ namespace myApp
                 Packet pkt;
                 int offset = 0;
                 int entry_hdr_size = 16;
-                byte[] b = new byte[2048];
+                byte[] b = new byte[4096];
                 byte[] filtered_packet = new byte[4096];
                 byte[] wheel_pkg = new byte[512];
                 byte[] state_pkg = new byte[512];
@@ -697,7 +697,10 @@ namespace myApp
                                 }
                             }
                         }
-
+                        else
+                        {
+                            Console.WriteLine("Discarded package id: " + entry_header.pkgId);
+                        }
                         offset += (int)entry_header.dataSize;
                     }
                 }
