@@ -634,11 +634,12 @@ namespace myApp
                 byte[] b = new byte[2048];
                 byte[] filtered_packet = new byte[4096];
                 byte[] wheel_pkg = new byte[512];
+                byte[] state_pkg = new byte[512];
                 wheel_o[] myWheel = new wheel_o[4];
                 state _state = new state(new byte[1024]);
                 header_m _header_M0 = new header_m(0, 0, 1, 0); // RDB_PKG_ID_START_OF_FRAME
-                header_m _header_M1 = new header_m(0, 0, 0, 0);
-                header_m _header_M2 = new header_m(0, 0, 0, 0);
+                header_m _header_M1 = new header_m(0, 0, 0, 0); // Object state
+                header_m _header_M2 = new header_m(0, 0, 0, 0); // Wheel frame
                 header_m _header_M3 = new header_m(0, 0, 2, 0); // RDB_PKG_ID_END_OF_FRAME
 
                 // Read main header
@@ -666,11 +667,20 @@ namespace myApp
                         if (entry_header.pkgId == 9)  // RDB_PKG_ID_OBJECT_STATE
                         {
                             _header_M1 = entry_header;
-                            _state = new state(b);
-                            Console.WriteLine("------Storing state pos (" +
-                                _state.state_base.pos.x + ", " +
-                                _state.state_base.pos.y + ", " +
-                                _state.state_base.pos.z + ")");
+                            for (int i = 0; i < entry_header.dataSize / entry_header.elementSize; i++)
+                            {
+                                Buffer.BlockCopy(b, i * (int)entry_header.elementSize, state_pkg, 0, (int)entry_header.elementSize);
+                                state state_tmp = new state(state_pkg);
+                                Console.WriteLine("state :" + state_tmp.state_base.id);
+                                if (state_tmp.state_base.id == 1)
+                                {
+                                    _state = state_tmp;
+                                    Console.WriteLine("------Storing state pos (" +
+                                        _state.state_base.pos.x + ", " +
+                                        _state.state_base.pos.y + ", " +
+                                        _state.state_base.pos.z + ")");
+                                }
+                            }
                         }
                         else if (entry_header.pkgId == 14)  // RDB_PKG_ID_WHEEL
                         {
@@ -679,6 +689,7 @@ namespace myApp
                             {
                                 Buffer.BlockCopy(b, i * (int)entry_header.elementSize, wheel_pkg, 0, (int)entry_header.elementSize);
                                 wheel_o tmp_wheel = new wheel_o(wheel_pkg);
+                                Console.WriteLine("wheel: " + tmp_wheel.playerId);
                                 if (tmp_wheel.playerId == 1)
                                 {
                                     Console.WriteLine("------Storing wheel no " + i + " steering: " + tmp_wheel.steeringAngle);
