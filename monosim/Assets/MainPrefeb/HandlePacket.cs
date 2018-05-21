@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using UnityEngine;
-using UnityEngine.UI;
+//using UnityEngine;
+//using UnityEngine.UI;
 
 namespace myApp
 {
-    public class HandlePacket : MonoBehaviour
+    public class HandlePacket
     {
 
         private char[] myname = new char[32];
@@ -626,7 +626,80 @@ namespace myApp
                 return pkt;
             }
 
+            public Packet Parse(byte[] DataStream)
+            {
+                Packet pkt;
+                int offset = 0;
+                int entry_hdr_size = 16;
+                byte[] b = new byte[2048];
+                byte[] filtered_packet = new byte[4096];
+                byte[] wheel_pkg = new byte[512];
+                wheel_o[] myWheel = new wheel_o[4];
+                state _state = new state(new byte[1024]);
+                header_m _header_M0 = new header_m(0, 0, 1, 0); // RDB_PKG_ID_START_OF_FRAME
+                header_m _header_M1 = new header_m(0, 0, 0, 0);
+                header_m _header_M2 = new header_m(0, 0, 0, 0);
+                header_m _header_M3 = new header_m(0, 0, 2, 0); // RDB_PKG_ID_END_OF_FRAME
+
+                // Read main header
+                header_c _header_C = new header_c(DataStream);
+
+                // Move past header. Data segment is the first entry header.
+                offset += (int)_header_C.headerSize;
+
+                Console.WriteLine("Frame no: " + _header_C.frameNo);
+
+                // Then check reamining sub packages
+                while (offset < (int)_header_C.headerSize + (int)_header_C.dataSize)
+                {
+                    // Read entry header
+                    Buffer.BlockCopy(DataStream, offset, b, 0, entry_hdr_size);
+                    header_m entry_header = new header_m(b);
+
+
+                    // Move ahead passed entry header, read data
+                    offset += (int)entry_header.headerSize;
+                    if (entry_header.dataSize > 0)
+                    {
+                        Buffer.BlockCopy(DataStream, offset, b, 0, (int)entry_header.dataSize);
+
+                        if (entry_header.pkgId == 9)  // RDB_PKG_ID_OBJECT_STATE
+                        {
+                            _header_M1 = entry_header;
+                            _state = new state(b);
+                            Console.WriteLine("------Storing state pos (" +
+                                _state.state_base.pos.x + ", " +
+                                _state.state_base.pos.y + ", " +
+                                _state.state_base.pos.z + ")");
+                        }
+                        else if (entry_header.pkgId == 14)  // RDB_PKG_ID_WHEEL
+                        {
+                            _header_M2 = entry_header;
+                            for (int i = 0; i < entry_header.dataSize / entry_header.elementSize; i++)
+                            {
+                                Buffer.BlockCopy(b, i * (int)entry_header.elementSize, wheel_pkg, 0, (int)entry_header.elementSize);
+                                wheel_o tmp_wheel = new wheel_o(wheel_pkg);
+                                if (tmp_wheel.playerId == 1)
+                                {
+                                    Console.WriteLine("------Storing wheel no " + i + " steering: " + tmp_wheel.steeringAngle);
+                                    myWheel[tmp_wheel.id] = new wheel_o(wheel_pkg);
+                                }
+                            }
+                        }
+
+                        offset += (int)entry_header.dataSize;
+                    }
+                }
+
+                if (_header_M1.pkgId == 0 | _header_M2.pkgId == 0)
+                {
+                    Console.WriteLine("Did not get start and/or end frame!\n");
+                }
+                pkt = new Packet(_header_C, _header_M0, _header_M1, _state, _header_M2, myWheel, _header_M3);
+                return pkt;
+            }
         }
+
 
         public class Catch
         {
