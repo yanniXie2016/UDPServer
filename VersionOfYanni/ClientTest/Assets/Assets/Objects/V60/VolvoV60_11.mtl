@@ -1,0 +1,114 @@
+newmtl material_1
+       Ka 0.792064 0.792064 0.792064 1
+       Kd 0.792064 0.792064 0.792064 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_3
+       Ka 0.740466 0.740466 0.740466 1
+       Kd 0.740466 0.740466 0.740466 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/Driver/Textures/Tx_Driver.rgb
+
+newmtl material_18
+       Ka 0.740466 0.740466 0.740466 1
+       Kd 0.740466 0.740466 0.740466 1
+       Ks 0.15 0.15 0.15 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_ln_VolvoV60_11.rgb
+
+newmtl material_7
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_9
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_16
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_15
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_12
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_2
+       Ka 0.792064 0.792064 0.792064 1
+       Kd 0.792064 0.792064 0.792064 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_10
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_5
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_4
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_WhiteRadialBlur.rgba
+
+newmtl material_6
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_8
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_14
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_13
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_11
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_VolvoV60_11.rgba
+
+newmtl material_19
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_ln_VolvoV60_11.rgb
+
+newmtl material_17
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd /home/dw/projects/ModelLibrary/Cars/VolvoV60_11/Textures/Tx_ln_VolvoV60_11.rgb
+

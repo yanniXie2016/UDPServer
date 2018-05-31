@@ -1,0 +1,404 @@
+fileFormatVersion: 2
+guid: b49f56cbbcfa69248846c9655f880f3b
+timeCreated: 1527505640
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Group_DB4.osgb_Geometry_LOD0
+    100002: Group_DB4.osgb_Geometry_LOD1
+    100004: Group_DB4.osgb_Geometry_LOD10
+    100006: Group_DB4.osgb_Geometry_LOD11
+    100008: Group_DB4.osgb_Geometry_LOD12
+    100010: Group_DB4.osgb_Geometry_LOD13
+    100012: Group_DB4.osgb_Geometry_LOD14
+    100014: Group_DB4.osgb_Geometry_LOD15
+    100016: Group_DB4.osgb_Geometry_LOD16
+    100018: Group_DB4.osgb_Geometry_LOD17
+    100020: Group_DB4.osgb_Geometry_LOD18
+    100022: Group_DB4.osgb_Geometry_LOD19
+    100024: Group_DB4.osgb_Geometry_LOD2
+    100026: Group_DB4.osgb_Geometry_LOD20
+    100028: Group_DB4.osgb_Geometry_LOD21
+    100030: Group_DB4.osgb_Geometry_LOD22
+    100032: Group_DB4.osgb_Geometry_LOD23
+    100034: Group_DB4.osgb_Geometry_LOD24
+    100036: Group_DB4.osgb_Geometry_LOD25
+    100038: Group_DB4.osgb_Geometry_LOD3
+    100040: Group_DB4.osgb_Geometry_LOD4
+    100042: Group_DB4.osgb_Geometry_LOD5
+    100044: Group_DB4.osgb_Geometry_LOD6
+    100046: Group_DB4.osgb_Geometry_LOD7
+    100048: Group_DB4.osgb_Geometry_LOD8
+    100050: Group_DB4.osgb_Geometry_LOD9
+    100052: //RootNode
+    400000: Group_DB4.osgb_Geometry_LOD0
+    400002: Group_DB4.osgb_Geometry_LOD1
+    400004: Group_DB4.osgb_Geometry_LOD10
+    400006: Group_DB4.osgb_Geometry_LOD11
+    400008: Group_DB4.osgb_Geometry_LOD12
+    400010: Group_DB4.osgb_Geometry_LOD13
+    400012: Group_DB4.osgb_Geometry_LOD14
+    400014: Group_DB4.osgb_Geometry_LOD15
+    400016: Group_DB4.osgb_Geometry_LOD16
+    400018: Group_DB4.osgb_Geometry_LOD17
+    400020: Group_DB4.osgb_Geometry_LOD18
+    400022: Group_DB4.osgb_Geometry_LOD19
+    400024: Group_DB4.osgb_Geometry_LOD2
+    400026: Group_DB4.osgb_Geometry_LOD20
+    400028: Group_DB4.osgb_Geometry_LOD21
+    400030: Group_DB4.osgb_Geometry_LOD22
+    400032: Group_DB4.osgb_Geometry_LOD23
+    400034: Group_DB4.osgb_Geometry_LOD24
+    400036: Group_DB4.osgb_Geometry_LOD25
+    400038: Group_DB4.osgb_Geometry_LOD3
+    400040: Group_DB4.osgb_Geometry_LOD4
+    400042: Group_DB4.osgb_Geometry_LOD5
+    400044: Group_DB4.osgb_Geometry_LOD6
+    400046: Group_DB4.osgb_Geometry_LOD7
+    400048: Group_DB4.osgb_Geometry_LOD8
+    400050: Group_DB4.osgb_Geometry_LOD9
+    400052: //RootNode
+    2100000: material_1
+    2100002: material_2
+    2100004: material_11
+    2100006: material_12
+    2100008: material_13
+    2100010: material_14
+    2100012: material_15
+    2100014: material_16
+    2100016: material_17
+    2100018: material_18
+    2100020: material_19
+    2100022: material_20
+    2100024: material_3
+    2100026: material_21
+    2100028: material_22
+    2100030: material_23
+    2100032: material_24
+    2100034: material_25
+    2100036: material_4
+    2100038: material_5
+    2100040: material_6
+    2100042: material_7
+    2100044: material_8
+    2100046: material_9
+    2100048: material_10
+    2300000: Group_DB4.osgb_Geometry_LOD0
+    2300002: Group_DB4.osgb_Geometry_LOD1
+    2300004: Group_DB4.osgb_Geometry_LOD10
+    2300006: Group_DB4.osgb_Geometry_LOD11
+    2300008: Group_DB4.osgb_Geometry_LOD12
+    2300010: Group_DB4.osgb_Geometry_LOD13
+    2300012: Group_DB4.osgb_Geometry_LOD14
+    2300014: Group_DB4.osgb_Geometry_LOD15
+    2300016: Group_DB4.osgb_Geometry_LOD16
+    2300018: Group_DB4.osgb_Geometry_LOD17
+    2300020: Group_DB4.osgb_Geometry_LOD18
+    2300022: Group_DB4.osgb_Geometry_LOD19
+    2300024: Group_DB4.osgb_Geometry_LOD2
+    2300026: Group_DB4.osgb_Geometry_LOD20
+    2300028: Group_DB4.osgb_Geometry_LOD21
+    2300030: Group_DB4.osgb_Geometry_LOD22
+    2300032: Group_DB4.osgb_Geometry_LOD23
+    2300034: Group_DB4.osgb_Geometry_LOD24
+    2300036: Group_DB4.osgb_Geometry_LOD25
+    2300038: Group_DB4.osgb_Geometry_LOD3
+    2300040: Group_DB4.osgb_Geometry_LOD4
+    2300042: Group_DB4.osgb_Geometry_LOD5
+    2300044: Group_DB4.osgb_Geometry_LOD6
+    2300046: Group_DB4.osgb_Geometry_LOD7
+    2300048: Group_DB4.osgb_Geometry_LOD8
+    2300050: Group_DB4.osgb_Geometry_LOD9
+    3300000: Group_DB4.osgb_Geometry_LOD0
+    3300002: Group_DB4.osgb_Geometry_LOD1
+    3300004: Group_DB4.osgb_Geometry_LOD10
+    3300006: Group_DB4.osgb_Geometry_LOD11
+    3300008: Group_DB4.osgb_Geometry_LOD12
+    3300010: Group_DB4.osgb_Geometry_LOD13
+    3300012: Group_DB4.osgb_Geometry_LOD14
+    3300014: Group_DB4.osgb_Geometry_LOD15
+    3300016: Group_DB4.osgb_Geometry_LOD16
+    3300018: Group_DB4.osgb_Geometry_LOD17
+    3300020: Group_DB4.osgb_Geometry_LOD18
+    3300022: Group_DB4.osgb_Geometry_LOD19
+    3300024: Group_DB4.osgb_Geometry_LOD2
+    3300026: Group_DB4.osgb_Geometry_LOD20
+    3300028: Group_DB4.osgb_Geometry_LOD21
+    3300030: Group_DB4.osgb_Geometry_LOD22
+    3300032: Group_DB4.osgb_Geometry_LOD23
+    3300034: Group_DB4.osgb_Geometry_LOD24
+    3300036: Group_DB4.osgb_Geometry_LOD25
+    3300038: Group_DB4.osgb_Geometry_LOD3
+    3300040: Group_DB4.osgb_Geometry_LOD4
+    3300042: Group_DB4.osgb_Geometry_LOD5
+    3300044: Group_DB4.osgb_Geometry_LOD6
+    3300046: Group_DB4.osgb_Geometry_LOD7
+    3300048: Group_DB4.osgb_Geometry_LOD8
+    3300050: Group_DB4.osgb_Geometry_LOD9
+    4300000: Group_DB4.osgb_Geometry_LOD0
+    4300002: Group_DB4.osgb_Geometry_LOD1
+    4300004: Group_DB4.osgb_Geometry_LOD10
+    4300006: Group_DB4.osgb_Geometry_LOD11
+    4300008: Group_DB4.osgb_Geometry_LOD12
+    4300010: Group_DB4.osgb_Geometry_LOD13
+    4300012: Group_DB4.osgb_Geometry_LOD14
+    4300014: Group_DB4.osgb_Geometry_LOD15
+    4300016: Group_DB4.osgb_Geometry_LOD16
+    4300018: Group_DB4.osgb_Geometry_LOD17
+    4300020: Group_DB4.osgb_Geometry_LOD18
+    4300022: Group_DB4.osgb_Geometry_LOD19
+    4300024: Group_DB4.osgb_Geometry_LOD2
+    4300026: Group_DB4.osgb_Geometry_LOD20
+    4300028: Group_DB4.osgb_Geometry_LOD21
+    4300030: Group_DB4.osgb_Geometry_LOD22
+    4300032: Group_DB4.osgb_Geometry_LOD23
+    4300034: Group_DB4.osgb_Geometry_LOD24
+    4300036: Group_DB4.osgb_Geometry_LOD25
+    4300038: Group_DB4.osgb_Geometry_LOD3
+    4300040: Group_DB4.osgb_Geometry_LOD4
+    4300042: Group_DB4.osgb_Geometry_LOD5
+    4300044: Group_DB4.osgb_Geometry_LOD6
+    4300046: Group_DB4.osgb_Geometry_LOD7
+    4300048: Group_DB4.osgb_Geometry_LOD8
+    4300050: Group_DB4.osgb_Geometry_LOD9
+    6400000: Group_DB4.osgb_Geometry_LOD0
+    6400002: Group_DB4.osgb_Geometry_LOD1
+    6400004: Group_DB4.osgb_Geometry_LOD10
+    6400006: Group_DB4.osgb_Geometry_LOD11
+    6400008: Group_DB4.osgb_Geometry_LOD12
+    6400010: Group_DB4.osgb_Geometry_LOD13
+    6400012: Group_DB4.osgb_Geometry_LOD14
+    6400014: Group_DB4.osgb_Geometry_LOD15
+    6400016: Group_DB4.osgb_Geometry_LOD16
+    6400018: Group_DB4.osgb_Geometry_LOD17
+    6400020: Group_DB4.osgb_Geometry_LOD18
+    6400022: Group_DB4.osgb_Geometry_LOD19
+    6400024: Group_DB4.osgb_Geometry_LOD2
+    6400026: Group_DB4.osgb_Geometry_LOD20
+    6400028: Group_DB4.osgb_Geometry_LOD21
+    6400030: Group_DB4.osgb_Geometry_LOD22
+    6400032: Group_DB4.osgb_Geometry_LOD23
+    6400034: Group_DB4.osgb_Geometry_LOD24
+    6400036: Group_DB4.osgb_Geometry_LOD25
+    6400038: Group_DB4.osgb_Geometry_LOD3
+    6400040: Group_DB4.osgb_Geometry_LOD4
+    6400042: Group_DB4.osgb_Geometry_LOD5
+    6400044: Group_DB4.osgb_Geometry_LOD6
+    6400046: Group_DB4.osgb_Geometry_LOD7
+    6400048: Group_DB4.osgb_Geometry_LOD8
+    6400050: Group_DB4.osgb_Geometry_LOD9
+    20500000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_1
+    second: {fileID: 2100000, guid: 2fbb2e72a568eac45ab8d74c48c040aa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_10
+    second: {fileID: 2100000, guid: 8abb9cde969c73d43965f1471cf1543e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_11
+    second: {fileID: 2100000, guid: 0363d43ef7981674a9cf5f159858eedc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_12
+    second: {fileID: 2100000, guid: 5f4da58caaf48324da9ab0aa835eb8ca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_13
+    second: {fileID: 2100000, guid: 7c512a16edfbc6040b264098e3611bcb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_14
+    second: {fileID: 2100000, guid: 799d692d8b7c5264988bc62593ecd0c2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_15
+    second: {fileID: 2100000, guid: 7a9e4495eb244f14ca5bcc701b1f9131, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_16
+    second: {fileID: 2100000, guid: b2aeb7ad09b6760479f941c6655afe5b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_17
+    second: {fileID: 2100000, guid: 35fc0d21e7f3286479c3cc6753f3e90f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_18
+    second: {fileID: 2100000, guid: 8e5e4bcb22e01f64ea7e62ed4a4dc69e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_19
+    second: {fileID: 2100000, guid: 3a20a8cc69f721745a88266b845a6e75, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_2
+    second: {fileID: 2100000, guid: abbfba0c80c63ac4e84a3c61d30843a3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_20
+    second: {fileID: 2100000, guid: 2ee74f13617ba6c48a7bcea60050f1ae, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_21
+    second: {fileID: 2100000, guid: b4af336dcd3c4244bb690ef09fb7e3f9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_22
+    second: {fileID: 2100000, guid: d56bd3603016faa4c94f91b2a71ca660, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_23
+    second: {fileID: 2100000, guid: c17defe6a9a18f847a19167eeea987d5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_24
+    second: {fileID: 2100000, guid: bd6e9e20f451ec24eada3dbbef404026, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_25
+    second: {fileID: 2100000, guid: 87cce6fd49778e24dbf2d54bbd96b79d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_3
+    second: {fileID: 2100000, guid: eea0b6a7c9899484f97edc03d04d8724, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_4
+    second: {fileID: 2100000, guid: 2e85c5d39a5c93b499770adb105b3333, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_5
+    second: {fileID: 2100000, guid: 817c75749e529914da0f98150d834d9c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_6
+    second: {fileID: 2100000, guid: 09080fda3c85c094ab22b71ea4855cb6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_7
+    second: {fileID: 2100000, guid: 3e6d536fca625aa40a40bf8333bbe119, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_8
+    second: {fileID: 2100000, guid: a7327aa3edd9edb4da54f224695eb6f6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_9
+    second: {fileID: 2100000, guid: c789cf502f2863148b4866f397ceaa03, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages:
+    - 0.25
+    - 0.125
+    - 0.0625
+    - 0.03125
+    - 0.015625
+    - 0.0078125
+    - 0.00390625
+    - 0.01
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,24 @@
+newmtl material_4
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxRoadMarkMasterSolid.png
+
+newmtl material_3
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxRoadMarkMaster.png
+
+newmtl material_1
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxKoSrfStreetUrban01.png
+
+newmtl material_2
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxPavAsphaltToGrassHR2.png
+

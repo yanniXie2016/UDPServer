@@ -1,0 +1,150 @@
+newmtl material_22
+       Ka 0 0 0 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxVegTreeDecidiousBark.png
+
+newmtl material_11
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxKoSrfStreetUrban01.png
+
+newmtl material_21
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxVegTreeFirBark.png
+
+newmtl material_25
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxVegTreeFirBranch.png
+
+newmtl material_3
+       Ka 0.779528 0.779528 0.779528 1
+       Kd 0.779528 0.779528 0.779528 1
+       Ks 0 0 0 1
+       map_Kd TxVegTree03.png
+
+newmtl material_16
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxHorizonTreeLine01-4096.png
+
+newmtl material_2
+       Ka 0 0 0 1
+       Kd 0.587062 0.587062 0.587062 1
+       Ks 0 0 0 1
+       map_Kd TxVegTree03.png
+
+newmtl material_18
+       Ka 0 0 0 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxVegTree03.png
+
+newmtl material_19
+       Ka 0.779528 0.779528 0.779528 1
+       Kd 0.779528 0.779528 0.779528 1
+       Ks 0 0 0 1
+       map_Kd TxVegTree03.png
+
+newmtl material_23
+       Ka 0.582677 0.582677 0.582677 1
+       Kd 0.582677 0.582677 0.582677 1
+       Ks 0 0 0 1
+       map_Kd TxVegBushFoliage_C2_VegBush08v3m.png
+
+newmtl material_17
+       Ka 0.582677 0.582677 0.582677 1
+       Kd 0.582677 0.582677 0.582677 1
+       Ks 0 0 0 1
+       map_Kd TxVegBushFoliage_C2_VegBush05v2m.png
+
+newmtl material_4
+       Ka 0.342614 0.342614 0.342614 1
+       Kd 0.342614 0.342614 0.342614 1
+       Ks 0 0 0 1
+       map_Kd TxVegBushFoliage_C2_VegBush08v2m.png
+
+newmtl material_1
+       Ka 0.582677 0.582677 0.582677 1
+       Kd 0.582677 0.582677 0.582677 1
+       Ks 0 0 0 1
+       map_Kd TxVegBushFoliage_C2_VegBush08v2m.png
+
+newmtl material_5
+       Ka 0.582677 0.582677 0.582677 1
+       Kd 0.582677 0.582677 0.582677 1
+       Ks 0 0 0 1
+       map_Kd TxVegBushFoliage_C2_VegBush04v6m.png
+
+newmtl material_20
+       Ka 0.582677 0.582677 0.582677 1
+       Kd 0.582677 0.582677 0.582677 1
+       Ks 0 0 0 1
+       map_Kd TxVegBushFoliage_C2_VegBush04v4m.png
+
+newmtl material_6
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxRoadMarkMasterSolid.png
+
+newmtl material_7
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxRoadMarkMaster.png
+
+newmtl material_24
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxTerrainGrassHRDry-2048.png
+
+newmtl material_8
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxTerrainGrassHR2-2048.png
+
+newmtl material_9
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxTerrainGrassHR-2048.png
+
+newmtl material_14
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd StyleTerrainGrassSand01HR-2048.png
+
+newmtl material_10
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxKoSrfStreetUrban01.png
+
+newmtl material_13
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxGroundAcre.png
+
+newmtl material_15
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd TxPavRoadCountrySideSingleway.png
+
+newmtl material_12
+       Ka 1 1 1 1
+       Kd 1 1 1 1
+       Ks 0 0 0 1
+       map_Kd StyleMerge01.png
+

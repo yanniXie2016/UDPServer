@@ -1,0 +1,6 @@
+C:\Users\YXIE10\Unity_test\UDPServer\test\ClientServerCSharp\ClientCSharp\bin\Debug\client.exe.config
+C:\Users\YXIE10\Unity_test\UDPServer\test\ClientServerCSharp\ClientCSharp\bin\Debug\client.exe
+C:\Users\YXIE10\Unity_test\UDPServer\test\ClientServerCSharp\ClientCSharp\bin\Debug\client.pdb
+C:\Users\YXIE10\Unity_test\UDPServer\test\ClientServerCSharp\ClientCSharp\obj\Debug\ClientCSharp.csproj.CoreCompileInputs.cache
+C:\Users\YXIE10\Unity_test\UDPServer\test\ClientServerCSharp\ClientCSharp\obj\Debug\client.exe
+C:\Users\YXIE10\Unity_test\UDPServer\test\ClientServerCSharp\ClientCSharp\obj\Debug\client.pdb
