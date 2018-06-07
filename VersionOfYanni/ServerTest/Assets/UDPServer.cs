@@ -12,25 +12,21 @@ namespace UDPChat
     public class UDPServer : MonoBehaviour
     {
         #region field && state
-        private Serialization m_serialization;
 
         public bool wire, wireless, WithVires;
         public string wireId, wirelessId;
-        private string ServerId;
         public string ViresId;
+        private string ServerId;
         public int s_Inport, s_Outport, c_Inport, c_Outport;   // Port for ingoing and outgoing
         public static List<IPEndPoint> clients = new List<IPEndPoint>(); // one element for each client.
         public static IPEndPoint ViresIpEndpointOut;
-        public static IPEndPoint ClientIpEndpointIn = null;
-        public static IPEndPoint ClientIpEndpointOut = null;
-        public static UdpClient serverIn = null;
-        public static UdpClient serverOut = null;
+        public static IPEndPoint ClientIpEndpointIn = null, ClientIpEndpointOut = null;
+        public static UdpClient serverIn = null, serverOut = null;
         public static byte[] buffer = null;
         public static byte[] data_serialized = null;
         public static byte[] dataInBytes = null;
-        //public UInt32[] old_frameNo = new UInt32[10];
         public UInt32[] counter = new UInt32[10];
-        bool flag = false;
+        bool flag = false; // check the package is from vires or unity
         #endregion
 
         void Start()
@@ -41,8 +37,8 @@ namespace UDPChat
                 ViresIpEndpointOut = new IPEndPoint(address, c_Outport);
                 clients.Add(ViresIpEndpointOut);
             }
-            if (wire) ServerId = wireId;
-            if (wireless) ServerId = wirelessId;
+            if (wire) { ServerId = wireId; }
+            if (wireless) { ServerId = wirelessId; }
             Init();
         }
 
@@ -90,10 +86,10 @@ namespace UDPChat
                         //    clients.Remove(clients[i]);
                         //}
                     }
-                        //else
-                        //{
-                        //    counter[i] = 0;
-                        //}
+                    //else
+                    //{
+                    //    counter[i] = 0;
+                    //}
                 }
                 catch (Exception e)
                 {
@@ -106,12 +102,12 @@ namespace UDPChat
         public void OnApplicationQuit()
         {
             serverIn.Close();
-            //serverOut.Close();
+            serverOut.Close();
         }
         public void OnDisable()
         {
             serverIn.Close();
-            //serverOut.Close();
+            serverOut.Close();
         }
     }
 }

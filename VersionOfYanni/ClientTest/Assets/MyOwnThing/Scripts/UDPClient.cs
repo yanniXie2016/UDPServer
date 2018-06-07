@@ -42,11 +42,13 @@ namespace UDPChat
         private Rigidbody rb;
         public int type;
         public int smooth;
-        public float rotAngle = 0.0f, radius;
+        public float radius, rotAngle;
         public UInt32 ID_UnityPlayer1, ID_UnityPlayer2,id;
         UInt32[] spare = new UInt32[3] { 0, 0, 0 };
         byte[] spare0 = new byte[2] { 0, 0 };
         UInt32[] spare1 = new UInt32[4] { 0, 0, 0, 0 };
+        Vector3 wheelPos;
+        Vector4 RotAngle;
         System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch(); // SimTime
         System.Diagnostics.Stopwatch stopWatch1 = new System.Diagnostics.Stopwatch(); // Calculate the time scape
         #endregion
@@ -120,6 +122,7 @@ namespace UDPChat
                     m_guest.SpawnLocation = new Vector3(Convert.ToSingle(-p.y), Convert.ToSingle(p.z), Convert.ToSingle(p.x));
                     Debug.Log("position:" + m_guest.SpawnLocation);
                     players[j] = m_guest.SpawnVechile(type);
+                    DontDestroyOnLoad(players[j]);
                     float factor = 180 / Mathf.PI;
                     players[j].transform.rotation = Quaternion.Euler(new Vector3(p.p * factor, -p.h * factor, p.r * factor)); ;
                     j += 1;
@@ -128,9 +131,9 @@ namespace UDPChat
                 {
                     for (int i = 0; i < guests.Count; i++)
                     {
-                        LatestPos[i] = players[i].transform.position;
                         if (guests[i].Equals(id))
                         {
+                            LatestPos[i] = players[i].transform.position;
                             if (LastFrame[i] < data_deserialized[n].msg_hdr.frameNo)
                             {
                                 Debug.Log("The frame number is right in order");
@@ -157,30 +160,32 @@ namespace UDPChat
             RDB_COORD_t pos = data_deserialized[n].object_state.Base.pos;
             RDB_COORD_t v = data_deserialized[n].object_state.ext.speed;
             CurrentPos[i] = new Vector3(Convert.ToSingle(-pos.y), Convert.ToSingle(pos.z), Convert.ToSingle(pos.x));
-
             NewVel[i] = new Vector3(Convert.ToSingle(-v.y), Convert.ToSingle(v.z), Convert.ToSingle(v.x));
-            diff = CurrentPos[i] - LatestPos[i];
             float factor = 180 / Mathf.PI;
-            players[i].transform.rotation = Quaternion.Euler(new Vector3(pos.p * factor, -pos.h * factor, -pos.r * factor));
-            players[i].transform.position = CurrentPos[i];
-            //Debug.Log("Elapsed:" + (stopWatch1.Elapsed.Milliseconds)/1000f);
-            //targetPos = CurrentPos[i] + NewVel[i] * (Time.fixedDeltaTime-(stopWatch1.Elapsed.Milliseconds)/1000);
-            //players[i].transform.position = Vector3.Lerp(CurrentPos[i], targetPos, Time.fixedDeltaTime * 5f);
-            //Debug.Log("True position:" + CurrentPos[i] + "frameNo:" + data_deserialized[n].msg_hdr.frameNo);
-            LastFrame[i] = data_deserialized[n].msg_hdr.frameNo;
-            // Update wheel steering angle
-            GameObject FL_Hub = players[i].transform.GetChild(1).GetChild(0).gameObject;
-            GameObject FR_Hub = players[i].transform.GetChild(1).GetChild(1).gameObject;
-            GameObject FL = players[i].gameObject.transform.GetChild(5).GetChild(0).gameObject;
-            GameObject FR = players[i].gameObject.transform.GetChild(5).GetChild(1).gameObject;
+            if (CurrentPos[i] != Vector3.zero)
+            {
+                diff = CurrentPos[i] - LatestPos[i];
+                players[i].transform.rotation = Quaternion.Euler(new Vector3(pos.p * factor, -pos.h * factor, -pos.r * factor));
+                players[i].transform.position = CurrentPos[i];
+                //Debug.Log("Elapsed:" + (stopWatch1.Elapsed.Milliseconds)/1000f);
+                //targetPos = CurrentPos[i] + NewVel[i] * (Time.fixedDeltaTime-(stopWatch1.Elapsed.Milliseconds)/1000);
+                //players[i].transform.position = Vector3.Lerp(CurrentPos[i], targetPos, Time.fixedDeltaTime * 5f);
+                //Debug.Log("True position:" + CurrentPos[i] + "frameNo:" + data_deserialized[n].msg_hdr.frameNo);
+                LastFrame[i] = data_deserialized[n].msg_hdr.frameNo;
+            }
 
-            float y = data_deserialized[n].wheel[0].Base.steeringAngle * factor;
-            FL.transform.localRotation = Quaternion.Euler(new Vector3(0, -y, 0));
-            FR.transform.localRotation = Quaternion.Euler(new Vector3(0, -y, 0));
-            WheelCollider FL_collider = FL_Hub.GetComponent<WheelCollider>();
-            WheelCollider FR_collider = FL_Hub.GetComponent<WheelCollider>();
-            FL_collider.steerAngle = -y;
-            FR_collider.steerAngle = -y;
+            // Update wheel steering angle
+            GameObject Wheel_Hub, Wheel;
+            for (int k = 0; k < 4; k++)
+            {
+                float y = data_deserialized[n].wheel[k].Base.steeringAngle * factor;
+                float x = data_deserialized[n].wheel[k].Base.rotAngle * factor;
+                Wheel_Hub = players[i].transform.GetChild(1).GetChild(k).gameObject;
+                Wheel = players[i].gameObject.transform.GetChild(5).GetChild(k).gameObject;
+                Wheel.transform.localRotation = Quaternion.Euler(new Vector3(x, -y, 0));
+                WheelCollider Wheel_collider = Wheel_Hub.GetComponent<WheelCollider>();
+                Wheel_collider.steerAngle = -y;
+            }
         }
 
         public void PredictPosition(int i)
@@ -213,9 +218,19 @@ namespace UDPChat
         {
             Pos = transform.position;
             Vel = m_Car.Speed;
-            Transform wheelsinfo = vehicle.gameObject.transform.GetChild(1).GetChild(0);
-            radius = wheelsinfo.GetComponent<WheelCollider>().radius;
-            rotAngle = (rotAngle + Time.fixedDeltaTime * m_Car.CurrentSpeed / 2.23693629f / radius) % (2 * Mathf.PI);
+            Transform wheelHub = vehicle.gameObject.transform.GetChild(1).GetChild(0);
+            WheelCollider collieder = wheelHub.GetComponent<WheelCollider>();
+            radius = collieder.radius;
+
+            if (Vel.x > 0) 
+            {
+                rotAngle = (rotAngle + Time.fixedDeltaTime * m_Car.CurrentSpeed / 2.23693629f / radius) % (2 * Mathf.PI);
+            }
+            else
+            {
+                rotAngle = (rotAngle - Time.fixedDeltaTime * m_Car.CurrentSpeed / 2.23693629f / radius) % (2 * Mathf.PI);
+            }
+           
             SimTime = stopWatch.Elapsed.TotalSeconds;
             data_serialized = PacketizeMessage();
             return data_serialized;
@@ -238,17 +253,12 @@ namespace UDPChat
             RDB_OBJECT_STATE_EXT_t object_ext = new RDB_OBJECT_STATE_EXT_t(speed, accel, 1.0f, spare);
             m_serialization.object_state = new RDB_OBJECT_STATE_t(object_base, object_ext);
 
-            RDB_WHEEL_BASE_t wheel_FL_base = new RDB_WHEEL_BASE_t(id, 0, 0, spare0, 1.0f, -0.025f, rotAngle / 180 * Mathf.PI, 0.0f, -m_Car.CurrentSteerAngle / 180 * Mathf.PI, spare1);
-            m_serialization.wheel[0] = new RDB_WHEEL_t(wheel_FL_base);
-
-            RDB_WHEEL_BASE_t wheel_FR_base = new RDB_WHEEL_BASE_t(id, 1, 0, spare0, 1.0f, -0.025f, rotAngle / 180 * Mathf.PI, 0.0f, -m_Car.CurrentSteerAngle / 180 * Mathf.PI, spare1);
-            m_serialization.wheel[1] = new RDB_WHEEL_t(wheel_FR_base);
-
-            RDB_WHEEL_BASE_t wheel_RR_base = new RDB_WHEEL_BASE_t(id, 2, 0, spare0, 1.0f, -0.025f, rotAngle / 180 * Mathf.PI, 0.0f, 0.0f, spare1);
-            m_serialization.wheel[2] = new RDB_WHEEL_t(wheel_RR_base);
-
-            RDB_WHEEL_BASE_t wheel_RL_base = new RDB_WHEEL_BASE_t(id, 3, 0, spare0, 1.0f, -0.025f, rotAngle / 180 * Mathf.PI, 0.0f, 0.0f, spare1);
-            m_serialization.wheel[3] = new RDB_WHEEL_t(wheel_RL_base);
+            Vector4 steeringAngle = new Vector4(-m_Car.CurrentSteerAngle / 180 * Mathf.PI, -m_Car.CurrentSteerAngle / 180 * Mathf.PI,0,0);
+            for(int k= 0; k <4; k++)
+            {
+                RDB_WHEEL_BASE_t wheel_base = new RDB_WHEEL_BASE_t(id, (byte)k, 0, spare0, 1.0f, -0.025f, rotAngle, 0.0f, steeringAngle[k], spare1);
+                m_serialization.wheel[k] = new RDB_WHEEL_t(wheel_base);
+            }
 
             data_serialized = m_serialization.Serialize();
             return data_serialized;

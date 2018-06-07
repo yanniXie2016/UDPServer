@@ -241,6 +241,8 @@ namespace UDPChat
                     {
                         result = GetStruct(reader.ReadBytes(16), result);
                         l += 16;
+                        //Debug.Log("offset:"+ l);
+                        //Debug.Log("pkaId:"+ result.msg_entry_hdr.pkgId);
                         switch (result.msg_entry_hdr.pkgId)
                         {
                             case 1:
@@ -276,6 +278,7 @@ namespace UDPChat
                                 break;
                         }
                         l += result.msg_entry_hdr.dataSize;
+                        //Debug.Log("offset:" + l);
                     }
                     l = 0;
                 }
